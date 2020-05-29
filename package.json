@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "egg": "^2.15.1",
+    "egg-mongoose": "^3.2.0",
     "egg-scripts": "^2.11.0",
+    "egg-validate": "^2.0.2",
     "egg-view-nunjucks": "^2.2.0"
   },
   "devDependencies": {
@@ -28,7 +30,7 @@
     "stop": "egg-scripts stop --title=egg-server-egg_example",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
-    "test": "npm run lint -- --fix && npm run test-local",
+    "test": "npm run test-local",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "lint": "eslint .",

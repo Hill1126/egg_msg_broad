@@ -5,6 +5,16 @@
  */
 module.exports = app => {
   const { router, controller } = app;
-  router.get('/', controller.home.index);
-  router.get('/news',controller.news.list);
+
+  // 用户相关
+  router.get('/user/:account', controller.user.get);
+  router.put('/user/:account', controller.user.update);
+  router.post('/user/avatar' , controller.user.updateAvatar);
+  
+  //账号登录相关
+  router.post('/login',controller.auth.login);
+  router.get('/exit',controller.auth.logout);
+  router.post('/register',controller.user.create);
+  
 };
+

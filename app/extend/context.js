@@ -10,5 +10,11 @@ module.exports = {
     this.body = obj;
   },
   
+  async fail(code=400,msg= 'request fail'){
+    let obj = {};
+    obj.code = code;
+    obj.msg = msg;
+    this.body = obj;
+  }
   
 };
