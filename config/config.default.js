@@ -44,6 +44,10 @@ exports.security = {
 
 };
 
+exports.middleware = [
+  'responseHandler'
+]
+
 exports.static = {
   prefix: '/',
 };

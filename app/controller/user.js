@@ -106,8 +106,8 @@ class UserController extends Controller {
       _id:ctx.session.user._id,
       avatar : '/avatar/'+filename,
     }
-    ctx.service.user.editUserInfo(userInfo)
-    ctx.ok(filepath);
+    let path = ctx.service.user.editUserInfo(userInfo).avatar;
+    ctx.ok(path);
   }
   
 

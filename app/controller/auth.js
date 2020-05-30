@@ -29,8 +29,6 @@ class AuthController extends Controller {
     }
     // 存入session
     ctx.session.user = user;
-    // 返回成功
-    ctx.ok();
   }
   
   async logout(){
@@ -38,7 +36,6 @@ class AuthController extends Controller {
     const {ctx} = this;
     //
     ctx.session.user = null;
-    ctx.ok();
     
   }
   
