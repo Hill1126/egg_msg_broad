@@ -1,20 +1,25 @@
 'use strict';
 
+const Joi = require('@hapi/joi');
+
+const JOI = Symbol('paras checker');
+
 module.exports = {
   
-  async ok(data,code=200,msg= 'success'){
-    let obj = {};
-    obj.code = code;
-    obj.data = data;
-    obj.msg = msg;
-    this.body = obj;
+  
+  validate2(schema,valueObj = this.request.body){
+    const {error,value} = Joi.validate(valueObj,schema);
+    if (!error) return value;
+    error.msg = error.message;
+    this.throw(422,error);
+    
   },
   
-  async fail(code=400,msg= 'request fail'){
-    let obj = {};
-    obj.code = code;
-    obj.msg = msg;
-    this.body = obj;
+  get Joi(){
+    
+    if (!this[JOI]) this[JOI] = Joi;
+    return this[JOI];
   }
+  
   
 };
