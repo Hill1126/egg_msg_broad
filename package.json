@@ -7,7 +7,7 @@
     "declarations": true
   },
   "dependencies": {
-    "@hapi/joi": "^16.1.8",
+    "joi": "^14.3.0",
     "egg": "^2.15.1",
     "egg-mongoose": "^3.2.0",
     "egg-scripts": "^2.11.0",
