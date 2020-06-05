@@ -32,7 +32,11 @@ module.exports = app => {
       ref: 'User',
       index: true,
     },
-    context: { type: String, default: '' },
+    context: {
+      type: String,
+      default: '',
+      index: true,
+    },
     createTime: { type: Date, default: Date.now() },
     isDel: { type: Boolean, default: false },
     replies: {
