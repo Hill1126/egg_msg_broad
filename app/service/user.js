@@ -40,11 +40,9 @@ class UserService extends Service {
   async loginByAccount(value) {
     const { ctx } = this;
     const user = await ctx.model.User.findOne(value, { password: 0 }).lean();
-    
-    if (!user){
-      ctx.throw(400,'账号或密码错误');
+    if (!user) {
+      ctx.throw(400, '账号或密码错误');
     }
-    
     return user;
   }
 

@@ -2,10 +2,6 @@
 
 const Controller = require('egg').Controller;
 
-const loginRule = {
-  account: { type: 'string', required: true },
-  password: { type: 'string', required: true },
-};
 
 class AuthController extends Controller {
 
@@ -16,13 +12,16 @@ class AuthController extends Controller {
   async login() {
     const { ctx, service } = this;
     // 参数校验
-    ctx.validate(loginRule, ctx.request.body);
-    const value = ctx.helper.buildObj(loginRule, ctx.request.body);
+    const data = ctx.validate2({
+      account: ctx.Joi.string().required(),
+      password: ctx.Joi.string().required(),
+    }, ctx.request.body);
+
     // 登录校验
-    let user ;
+    let user;
     try {
-      user = await service.user.loginByAccount(value);
-    }catch (e) {
+      user = await service.user.loginByAccount(data);
+    } catch (e) {
       ctx.body = e.message;
       ctx.status = e.status;
       return;
@@ -30,17 +29,15 @@ class AuthController extends Controller {
     // 存入session
     ctx.session.user = user;
   }
-  
-  async logout(){
-    //删除用户session
-    const {ctx} = this;
+
+  async logout() {
+    // 删除用户session
+    const { ctx } = this;
     //
     ctx.session.user = null;
-    
+
   }
-  
-  
-  
+
 
 }
 

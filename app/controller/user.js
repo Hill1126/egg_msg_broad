@@ -17,12 +17,12 @@ const updateRule = {
 };
 
 class UserController extends Controller {
-  
+
   async create() {
     const { ctx, service } = this;
     const obj = {};
-    obj.password = ctx.request.body.password ;
-    obj.account = ctx.request.body.account ;
+    obj.password = ctx.request.body.password;
+    obj.account = ctx.request.body.account;
     ctx.validate(createRule, ctx.request.body);
     try {
       const user = await service.user.createUser(obj);
@@ -54,8 +54,7 @@ class UserController extends Controller {
     if (baseUser) {
       ctx.body = baseUser;
     } else {
-      ctx.status = 404;
-      ctx.body = '没有该用户';
+      ctx.throw('用户信息未找到', 400);
     }
   }
 
@@ -71,21 +70,21 @@ class UserController extends Controller {
     ctx.body = await service.user.editUserInfo(userInfo);
 
   }
-  
-  async updateAvatar(){
+
+  async updateAvatar() {
     const { ctx, service } = this;
-    
-      //文件流上传形式
-      const stream = await ctx.getFileStream();
-      //判断文件后缀名
-      const extname =  path.extname(stream.filename).toLocaleLowerCase();
-      //设定写入的路径
-      let filename =  Date.now()+extname;
-      const target = path.join(this.config.baseDir, 'app/public/avatar',filename);
-      //生成一个文件写入 文件流
-      const writeStream = fs.createWriteStream(target);
-      stream.pipe(writeStream)
-    
+
+    // 文件流上传形式
+    const stream = await ctx.getFileStream();
+    // 判断文件后缀名
+    const extname = path.extname(stream.filename).toLocaleLowerCase();
+    // 设定写入的路径
+    const filename = Date.now() + extname;
+    const target = path.join(this.config.baseDir, 'app/public/avatar', filename);
+    // 生成一个文件写入 文件流
+    const writeStream = fs.createWriteStream(target);
+    stream.pipe(writeStream);
+
     /*
     const file = ctx.request.files[0];
     let extname =path.extname(file.filename).toLocaleLowerCase();
@@ -93,7 +92,7 @@ class UserController extends Controller {
       ctx.fail(undefined,'请上传jpg、png格式的图片');
       return;
     }
-  
+
     //设定写入的路径
     let filepath = path.join('/','avatar', Date.now()+extname)
     const target = path.join(this.config.baseDir, 'app/public/avatar',filepath);
@@ -101,15 +100,15 @@ class UserController extends Controller {
       ctx.logger.error(err);
     });
     */
-    //更新用户头像资料
+    // 更新用户头像资料
     const userInfo = {
-      _id:ctx.session.user._id,
-      avatar : '/avatar/'+filename,
-    }
+      _id: ctx.session.user._id,
+      avatar: '/avatar/' + filename,
+    };
     let path = ctx.service.user.editUserInfo(userInfo).avatar;
     ctx.ok(path);
   }
-  
+
 
 }
 
