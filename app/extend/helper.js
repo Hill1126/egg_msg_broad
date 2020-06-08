@@ -19,7 +19,15 @@ module.exports = {
 
     return obj;
   },
-  
 
-  
+  /**
+   * 将id字符串包装为objectId
+   * @param id
+   */
+  wrapperObjectId(id) {
+    const { app } = this;
+    return app.mongoose.Types.ObjectId(id);
+  },
+
+
 };

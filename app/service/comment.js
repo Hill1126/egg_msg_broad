@@ -82,29 +82,33 @@ class CommentService extends Service {
   /**
    * 创建留言的二级回复
    * @param {object} data
-   * @param {string} data.commentId 留言内容
+   * @param {string} data.commentId 留言内容id
    * @param {string} data.context 回复内容
-   * @param {string} data.receiveId 接收用户的id
+   * @param {string} data.toUser 接收用户的id
    * @return {Promise<void>}
    */
-  async replyComment(data) {
-    const { ctx } = this;
+  async createReply(data) {
+    const { ctx, app } = this;
     // 构造回复对象
     const reply = {
-      createUser: ctx.session.userInfo._id,
-      toUser: data.receiveId,
+      createUser: ctx.session.user._id,
+      toUser: app.mongoose.Types.ObjectId(data.toUser),
       context: data.context,
     };
+    const where = {
+      isDel: false,
+      _id: data.commentId,
+    };
+
     // 插入留言回复中
-    ctx.model.Comment.update(
-      {
-        idDel: false,
-        _id: data.commentId,
-      },
+    const result = await ctx.model.Comment.findOneAndUpdate(where,
       {
         $push: { replies: reply },
-      }
-    ).exec();
+      },
+      { new: true }
+    );
+    return result;
+
   }
 
 

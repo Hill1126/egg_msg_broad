@@ -64,6 +64,17 @@ class CommentController extends Controller {
     ctx.body = 'success';
   }
 
+  async createReply() {
+    const { ctx } = this;
+    const schema = {
+      context: ctx.Joi.string().required(),
+      toUser: ctx.Joi.string().required(),
+      commentId: ctx.Joi.string().required(),
+    };
+    const data = ctx.validate2(schema, Object.assign(ctx.request.body, ctx.params));
+    ctx.body = await ctx.service.comment.createReply(data);
+  }
+
 
 }
 

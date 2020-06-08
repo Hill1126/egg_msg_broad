@@ -24,5 +24,8 @@ module.exports = app => {
   router.put('/api/comment/:id', loginChecker, controller.comment.updateComment);
   router.delete('/api/comment/:id', loginChecker, controller.comment.deleteComment);
 
+  // 回复留言相关
+  router.post('/api/comment/:commentId/reply', loginChecker, controller.comment.createReply);
+
 };
 

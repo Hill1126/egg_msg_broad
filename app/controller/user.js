@@ -72,7 +72,7 @@ class UserController extends Controller {
   }
 
   async updateAvatar() {
-    const { ctx, service } = this;
+    const { ctx } = this;
 
     // 文件流上传形式
     const stream = await ctx.getFileStream();
