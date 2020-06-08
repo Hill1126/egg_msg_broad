@@ -21,6 +21,7 @@ module.exports = app => {
   router.post('/api/comment', loginChecker, controller.comment.createComment);
   router.get('/api/comment', controller.comment.listComments);
   router.get('/api/comment/:id', controller.comment.getComment);
+  router.put('/api/comment/:id', loginChecker, controller.comment.updateComment);
   router.delete('/api/comment/:id', loginChecker, controller.comment.deleteComment);
 
 };

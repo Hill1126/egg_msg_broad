@@ -28,6 +28,7 @@ class AuthController extends Controller {
     }
     // 存入session
     ctx.session.user = user;
+    ctx.body = user;
   }
 
   async logout() {

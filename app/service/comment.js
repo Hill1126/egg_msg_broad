@@ -23,6 +23,7 @@ class CommentService extends Service {
    */
   async getComment(commentId) {
     const { ctx } = this;
+    // todo 添加未删除筛选
     return ctx.model.Comment.findById(commentId);
   }
 
@@ -56,14 +57,56 @@ class CommentService extends Service {
   }
 
   /**
+   *
+   * @param {object} data
+   * @param {objectId} data.id
+   * @param {string} data.context
+   * @return {Promise<void>}
+   */
+  async updateComment(data) {
+    const { ctx, app } = this;
+    return ctx.model.Comment.findOneAndUpdate({ _id: app.mongoose.Types.ObjectId(data.id), isDel: false }, { $set: { context: data.context } });
+  }
+
+
+  /**
    * 根据id删除留言
    * @param {string} commentId
-   * @return {Promise<void>}
+   * @return {Promise<string>}
    */
   async deleteComment(commentId) {
     const { ctx } = this;
-    ctx.model.Comment.findOneAndUpdate({ id: commentId }, { $set: { isDel: true } });
+    ctx.model.Comment.findOneAndUpdate({ id: commentId }, { $set: { isDel: true } }).exec();
   }
+
+  /**
+   * 创建留言的二级回复
+   * @param {object} data
+   * @param {string} data.commentId 留言内容
+   * @param {string} data.context 回复内容
+   * @param {string} data.receiveId 接收用户的id
+   * @return {Promise<void>}
+   */
+  async replyComment(data) {
+    const { ctx } = this;
+    // 构造回复对象
+    const reply = {
+      createUser: ctx.session.userInfo._id,
+      toUser: data.receiveId,
+      context: data.context,
+    };
+    // 插入留言回复中
+    ctx.model.Comment.update(
+      {
+        idDel: false,
+        _id: data.commentId,
+      },
+      {
+        $push: { replies: reply },
+      }
+    ).exec();
+  }
+
 
 }
 

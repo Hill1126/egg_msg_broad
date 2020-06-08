@@ -19,10 +19,7 @@ module.exports = () => {
       ctx.body = res;
       return;
     }
-    // 直接返回，用于静态资源响应
-    if (ctx.body.sikp) {
-      return ctx.body;
-    }
+
     // 正常封装
     const res = {
       code: 0,

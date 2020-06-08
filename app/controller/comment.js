@@ -45,11 +45,25 @@ class CommentController extends Controller {
     ctx.body = await ctx.service.comment.listComments(data);
   }
 
+  async updateComment() {
+    const { ctx } = this;
+    const schema = {
+      context: ctx.Joi.string().required(),
+      id: ctx.Joi.string().required(),
+    };
+    // 进行参数校验
+    const data = ctx.validate2(schema, Object.assign(ctx.request.body, ctx.params));
+    ctx.body = await ctx.service.comment.updateComment(data);
+  }
+
+
   async deleteComment() {
     const { ctx } = this;
     const id = ctx.validate2({ id: ctx.Joi.string().required() }, ctx.params);
-    ctx.body = await ctx.service.comment.deleteComment(id);
+    ctx.service.comment.deleteComment(id);
+    ctx.body = 'success';
   }
+
 
 }
 
