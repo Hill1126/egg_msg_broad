@@ -1,9 +1,11 @@
 'use strict';
 
-const path = require('path');
-const sendToWormhole = require('stream-wormhole');
+
 const fs = require('fs');
 const Controller = require('egg').Controller;
+
+const path = require('path');
+const sendToWormhole = require('stream-wormhole');
 
 // 定义创建接口的请求参数规则
 const createRule = {

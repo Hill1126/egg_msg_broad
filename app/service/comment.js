@@ -108,7 +108,26 @@ class CommentService extends Service {
       { new: true }
     );
     return result;
+  }
 
+  /**
+   * 删除留言中的评论
+   * @param {object} data
+   * @param {objectId} data.id 留言板id
+   * @param {objectId} data.replyId 留言回复id
+   * @return {Promise<void>}
+   */
+  async deleteReply(data) {
+    const { ctx, app } = this;
+    ctx.model.Comment.update(
+      {
+        _id: app.mongoose.Types.ObjectId(data.data.id),
+        replies: { $elemMatch: { _id: app.mongoose.Types.ObjectId(data.replyId) } },
+      },
+      {
+        $set: { 'replies.$.isDel': true },
+      }
+    );
   }
 
 

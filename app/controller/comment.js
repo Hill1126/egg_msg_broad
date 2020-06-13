@@ -75,6 +75,16 @@ class CommentController extends Controller {
     ctx.body = await ctx.service.comment.createReply(data);
   }
 
+  async deleteReply() {
+    const { ctx } = this;
+    const schema = {
+      id: ctx.Joi.string().required(),
+      replyId: ctx.Joi.string().required(),
+    };
+    const data = ctx.validate2(schema, Object.assign(ctx.request.body, ctx.params));
+    ctx.body = await ctx.service.comment.deleteReply(data);
+  }
+
 
 }
 
