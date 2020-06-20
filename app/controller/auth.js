@@ -28,6 +28,7 @@ class AuthController extends Controller {
     }
     // 存入session
     ctx.session.user = user;
+    user.password = null;
     ctx.body = user;
   }
 
