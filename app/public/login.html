@@ -4,9 +4,13 @@
 <meta charset="utf-8">
 <title>请登录</title>
 
-<link type="text/css" href="css/login.css" rel="stylesheet" />
-<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+    <link type="text/css" href="css/login.css" rel="stylesheet" />
+    <script src="js/jquery.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+
+    <!-- layui部分-->
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <script src="./layui/layui.js"></script>
 
 </head>
 <body>
@@ -18,8 +22,8 @@
         <div class="left">
             <div class="login">登录</div>
             <div class="eula">欢迎使用！</div>
-            <div class="eula">
-                <a href="register.html">前往注册</a>
+            <div class="eula" >
+                <a href="register.html" style="color: #01AAED">还没有账号？前往注册</a>
             </div>
         </div>
         <div class="right">
@@ -59,7 +63,9 @@
 <script>
 
 
-
+  //注意：导航 依赖 element 模块，否则无法进行功能性操作
+  layui.use(['element','form','layer','laypage'], function(){
+  });
 
 function login() {
 
@@ -72,14 +78,15 @@ $.post("/api/login",
   },
   function(data,status){
   if (data.code !==0){
-    alert(data.msg);
+    layui.layer.msg(data.msg);
     return;
   }
   //存储用户信息
     const storage = window.localStorage;
     storage.userInfo = data.data;
     // 跳转到留言板首页。
-
+    const url = document.location.protocol + '//' +window.location.host+'/index.html'
+    window.location = (url);
   }
 );
 
@@ -118,7 +125,7 @@ document.querySelector('#password').addEventListener('focus', function(e) {
     }
   });
 });
-document.querySelector('#submit').addEventListener('focus', function(e) {
+document.querySelector('#button').addEventListener('focus', function(e) {
   if (current) current.pause();
   current = anime({
     targets: 'path',

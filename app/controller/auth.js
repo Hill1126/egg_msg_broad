@@ -18,17 +18,11 @@ class AuthController extends Controller {
     }, ctx.request.body);
 
     // 登录校验
-    let user;
-    try {
-      user = await service.user.loginByAccount(data);
-    } catch (e) {
-      ctx.body = e.message;
-      ctx.status = e.status;
-      return;
-    }
+    const user = await service.user.loginByAccount(data);
+
+    user.password = null;
     // 存入session
     ctx.session.user = user;
-    user.password = null;
     ctx.body = user;
   }
 
@@ -37,7 +31,6 @@ class AuthController extends Controller {
     const { ctx } = this;
     //
     ctx.session.user = null;
-
   }
 
 

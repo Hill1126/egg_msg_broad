@@ -4,8 +4,12 @@
 <meta charset="utf-8">
 <title>欢迎注册</title>
 
-<link type="text/css" href="css/login.css" rel="stylesheet" />
-<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link type="text/css" href="css/login.css" rel="stylesheet" />
+    <script src="js/jquery.min.js"></script>
+
+    <!-- layui部分-->
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <script src="./layui/layui.js"></script>
 
 </head>
 <body>
@@ -56,6 +60,10 @@
 
 <script>
 
+  //注意：导航 依赖 element 模块，否则无法进行功能性操作
+  layui.use(['layer'], function(){
+  });
+
 function register() {
   let account = $('#account').val();
   let password = $('#password').val();
@@ -66,10 +74,15 @@ function register() {
       password:password,
     },
     function(data,status){
-      alert(data.msg);
+
       if (data.code === 0){
-        const url = document.location.protocol + '//' +window.location.host+'/login.html'
-        window.location = (url);
+        layui.layer.msg('注册成功即将跳转登录页');
+        setTimeout(()=>{
+          const url = document.location.protocol + '//' +window.location.host+'/login.html'
+          window.location = (url);
+        },1500);
+      }else{
+        layui.layer.msg(data.msg);
       }
     }
   );

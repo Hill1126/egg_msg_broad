@@ -11,6 +11,7 @@ module.exports = () => {
     try {
       await next();
     } catch (e) {
+
       // 简单处理错误
       const res = {
         code: 1,
@@ -30,7 +31,7 @@ module.exports = () => {
       res.msg = '接口未找到';
       res.code = 404;
     }
-    ctx.body = res;
+    ctx.response.body = res;
   };
 
 
