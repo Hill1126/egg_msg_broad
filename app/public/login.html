@@ -83,7 +83,9 @@ $.post("/api/login",
   }
   //存储用户信息
     const storage = window.localStorage;
-    storage.userInfo = data.data;
+    storage.username = data.data.name;
+    storage.account = data.data.account;
+    storage.avatar = data.data.avatar;
     // 跳转到留言板首页。
     const url = document.location.protocol + '//' +window.location.host+'/index.html'
     window.location = (url);
