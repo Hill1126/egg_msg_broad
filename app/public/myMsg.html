@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的留言记录</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <link rel="stylesheet" href="css/user.css">
+
+    <script src="./js/jquery.min.js"></script>
+</head>
+<body >
+
+<!-- 头部信息 -->
+<div id="header"></div>
+
+
+<div class="layui-container">
+    <!-- 留言tabs-->
+    <div class="layui-tab layui-tab-card">
+    <ul class="layui-tab-title">
+        <li class="layui-this">我的留言</li>
+        <li>我的回复</li>
+    </ul>
+
+    <div class="layui-tab-content" style="height: 1000px;">
+        <div class="layui-tab-item layui-show">
+            <!-- 留言展示部分-->
+            <div class="layui-container" >
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                    <legend>看看大家说了什么</legend>
+                </fieldset>
+                <div class="layui-row">
+                    <!-- 留言名字留言内容 -->
+                    <div class="layui-row">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                <img src="http://t.cn/RCzsdCq" class="layui-nav-img">  想减肥  <label id="time" >dddd</label>
+                            </div>
+                            <div class="layui-card-body">
+                                内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello
+                                $bn 内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row" >
+                        <div class="layui-col-md2">
+                            <button type="button" class="layui-btn layui-btn-sm" id="lockComment2">查看评论</button>共<span>0</span>条
+                        </div>
+                        <div class="layui-col-md3  layui-col-md-offset7">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-danger">删除</button>
+                            <button type="button" class="layui-btn layui-btn-sm">编辑</button>
+                            <button type="button" class="layui-btn layui-btn-sm">评论</button>
+                        </div>
+
+                    </div>
+                    <hr>
+                    <div class="comment">
+                        <div class="reply_list" id="reply_list1" >
+                            <div class="reply" >
+                                <span class="reply_name">小白</span>回复<span class="reply_name">小黑</span>：<span class="reply_content">你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好 </span>
+                                <a  data-id="1" class="del_reply">
+                                    <i class="icon layui-icon " >    删除</i>
+                                </a>
+                            </div>
+                            <div class="reply">
+                                <span class="reply_name">小白</span>回复<span class="reply_name">小黑</span>：<span class="reply_content">你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊 </span>
+                                <a  data-id="1" class="del_reply">
+                                    <i class="icon layui-icon" >    删除</i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                </div>
+                <div class="layui-row">
+                    <!-- 留言名字留言内容 -->
+                    <div class="layui-row">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                <img src="http://t.cn/RCzsdCq" class="layui-nav-img">  想减肥  <label id="time3" >dddd</label>
+                            </div>
+                            <div class="layui-card-body">
+                                内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello
+                                $bn 内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row" >
+                        <div class="layui-col-md2">
+                            <button type="button" class="layui-btn layui-btn-sm" id="lockComment3">查看评论</button>共<span>0</span>条
+                        </div>
+                        <div class="layui-col-md3  layui-col-md-offset7">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-danger">删除</button>
+                            <button type="button" class="layui-btn layui-btn-sm">编辑</button>
+                            <button type="button" class="layui-btn layui-btn-sm">评论</button>
+                        </div>
+
+                    </div>
+                    <hr>
+                    <div class="comment">
+                        <div class="reply_list" id="reply_list3" >
+                            <div class="reply" >
+                                <span class="reply_name">小白</span>回复<span class="reply_name">小黑</span>：<span class="reply_content">你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好 </span>
+                                <a  data-id="1" class="del_reply">
+                                    <i class="layui-icon layui-icon-close"> </i>
+                                </a>
+                            </div>
+                            <div class="reply">
+                                <span class="reply_name">小白</span>回复<span class="reply_name">小黑</span>：<span class="reply_content">你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊 </span>
+                                <a  data-id="1" class="del_reply">
+                                    <i class="icon layui-icon" >    删除</i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <!-- 留言名字留言内容 -->
+                    <div class="layui-row">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                <img src="http://t.cn/RCzsdCq" class="layui-nav-img">  想减肥  <label id="time4" >dddd</label>
+                            </div>
+                            <div class="layui-card-body">
+                                内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello
+                                $bn 内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello内容hello
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row" >
+                        <div class="layui-col-md2">
+                            <button type="button" class="layui-btn layui-btn-sm" id="lockComment">查看评论</button>共<span>0</span>条
+                        </div>
+                        <div class="layui-col-md3  layui-col-md-offset7">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-danger">删除</button>
+                            <button type="button" class="layui-btn layui-btn-sm">编辑</button>
+                            <button type="button" class="layui-btn layui-btn-sm">评论</button>
+                        </div>
+
+                    </div>
+                    <hr>
+                    <div class="comment">
+                        <div class="reply_list" id="reply_list" >
+                            <div class="reply" >
+                                <span class="reply_name">小白</span>回复<span class="reply_name">小黑</span>：<span class="reply_content">你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好 </span>
+                                <a  data-id="1" class="del_reply">
+                                    <i class="icon layui-icon " >    删除</i>
+                                </a>
+                            </div>
+                            <div class="reply">
+                                <span class="reply_name">小白</span>回复<span class="reply_name">小黑</span>：<span class="reply_content">你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊 </span>
+                                <a  data-id="1" class="del_reply">
+                                    <i class="icon layui-icon" >    删除</i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 留言展示框 -->
+
+                <hr>
+                <!-- 分页按钮-->
+                <div  class="layui-row">
+                    <div id="demo1"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-tab-item">
+
+            没有回复
+        </div>
+
+    </div>
+</div>
+
+
+</div>
+
+<script src="./layui/layui.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script>
+  layui.use(['element','form','layer','laypage'], function(){
+
+
+    });
+
+
+</script>
+</body>
+</html>

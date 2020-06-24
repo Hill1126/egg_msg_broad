@@ -5,55 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>个人中心</title>
     <link rel="stylesheet" href="./layui/css/layui.css">
+    <link rel="stylesheet" href="css/user.css">
+
+    <script src="./js/jquery.min.js"></script>
+    <script src="./layui/layui.js"></script>
 </head>
-<body>
+<body bgcolor="#F2F2F2">
 
 <!-- 头部信息 -->
-<div class="layui-layout layui-layout-admin">
-    <div class="layui-header">
-        <div class="layui-logo">egg 在线留言板</div>
-        <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item">
-                <a href="javascript:;">首页</a>
-            </li>
-        </ul>
+<div id="header"></div>
 
-        <ul class="layui-nav layui-layout-right">
-            <li class="layui-nav-item">
-                <a href="javascript:;">我的留言</a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">
-                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-                    贤心
-                </a>
-                <dl class="layui-nav-child">
-                    <dd><a href="">个人中心</a></dd>
-                    <dd><a href="">修改密码</a></dd>
-                </dl>
-            </li>
-            <li class="layui-nav-item"><a href="">退出</a></li>
-        </ul>
-    </div>
-</div>
+<!-- 青色分割线-->
+
 
 <!--个人信息页面-->
 <div class="layui-container">
-    <div class="layui-row">
-        <div class="layui-col-xs12 layui-col-md8">
-            <div class="grid-demo grid-demo-bg1">移动：12/12、桌面：8/12</div>
+
+    <div class="layui-form" id="user_detail">
+        <div class="layui-form-item">
+            <label class="layui-form-label">头像</label>
+            <img src="http://t.cn/RCzsdCq" class="img">
+            <button type="button" class="layui-btn layui-btn-xs" id="avatar_button">
+                <i class="layui-icon">&#xe67c;</i>更新头像
+            </button>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input name="account" readonly="readonly" autocomplete="off" class="layui-input" value="1015599722">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" required  lay-verify="required" placeholder="请输入昵称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">简介</label>
+            <div class="layui-input-block">
+                <textarea name="introduction" placeholder="请输入您的简介" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" onclick="update()" lay-submit lay-filter="formDemo">提交修改</button>
+            </div>
         </div>
     </div>
+
 </div>
 
 
-<script src="./layui/layui.js"></script>
+
+<script type="text/javascript" src="js/utils.js"></script>
 <script>
+
+    // 更新用户信息
+    function update(){
+
+
+
+    }
+
+
   //一般直接写在一个js文件中
-  layui.use(['layer', 'form'], function(){
-    let layer = layui.layer;
+  layui.use(['upload','element','form'], function(){
+    const upload = layui.upload;
+    const form = layui.form;
 
+    //监听提交
+    form.on('submit(formDemo)', function(data){
+      const url = `/api/user/${data.field.account}`;
+      // 获取昵称和简介，上传到数据库
+      $.post(url,
+        {
+          name:data.field.name,
+          introduction:data.field.introduction,
+        },
+        function(data,status){
+          layer.msg(JSON.stringify(data.field));
+        }
+      );
+    });
 
+    //执行实例
+    const uploadInst = upload.render({
+      elem: '#avatar_button' //绑定元素
+      ,url: '/upload/' //上传接口
+      ,done: function(res){
+        alert('成功');
+      }
+      ,error: function(){
+        alert('失败')
+      }
+    });
   });
 </script>
 </body>
