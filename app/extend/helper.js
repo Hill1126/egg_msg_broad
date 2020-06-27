@@ -29,5 +29,24 @@ module.exports = {
     return app.mongoose.Types.ObjectId(id);
   },
 
+  /**
+   * 根据给出的日期对象，转换为 yyyy-mm-dd:hh-MM
+   * @param date 要转换的日期对象
+   * @return dateString 日期字符串
+   */
+  parseDateString(date) {
+    const year = date.getFullYear();
+    let month = date.getMonth()+1;
+    let dt = date.getDate();
+
+    if (dt < 10) {
+      dt = '0' + dt;
+    }
+    if (month < 10) {
+      month = '0' + month;
+    }
+    return `${year}-${month}-${dt} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  },
+
 
 };

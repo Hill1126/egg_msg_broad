@@ -12,7 +12,7 @@ class CommentService extends Service {
    */
   async createComment(data) {
     const { ctx } = this;
-    return ctx.model.Comment.create(data);
+    return await ctx.model.Comment.create(data);
 
   }
 
@@ -50,7 +50,11 @@ class CommentService extends Service {
     }
     const [ list, count ] = await Promise.all([
       // 查找结果及其总数据量
-      ctx.model.Comment.find(where).limit(pageSize).skip(skip),
+      ctx.model.Comment.find(where).populate(
+        { path: 'creator', select: 'name avatar' }
+      ).limit(pageSize)
+        .skip(skip)
+        .sort({ createTime: -1 }),
       ctx.model.Comment.count(where),
     ]);
     return { count, list };

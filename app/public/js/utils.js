@@ -1,4 +1,24 @@
+'use strict';
 
+const storage = window.localStorage;
+let loginHtml = `
+<li class="layui-nav-item">
+  <a href="login.html">
+   请登录
+  </a>`;
+
+if (storage.username) {
+  const userMsg = `<img src="${storage.avatar}" class="layui-nav-img">${storage.username}`;
+  loginHtml = `<li class="layui-nav-item">
+  <a href="javascript:;">
+  ${userMsg}
+  </a>
+  <dl class="layui-nav-child">
+  <dd><a href="user.html">个人中心</a></dd>
+<dd><a href="changePass.html">修改密码</a></dd>
+</dl>
+</li>`;
+}
 
 document.getElementById('header').innerHTML = `
  <div class="layui-layout layui-layout-admin">
@@ -14,16 +34,7 @@ document.getElementById('header').innerHTML = `
       <li class="layui-nav-item">
         <a href="myMsg.html">我的留言</a>
       </li>
-      <li class="layui-nav-item">
-        <a href="javascript:;">
-          <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
-          贤心
-        </a>
-        <dl class="layui-nav-child">
-          <dd><a href="user.html">个人中心</a></dd>
-          <dd><a href="changePass.html">修改密码</a></dd>
-        </dl>
-      </li>
+      ${loginHtml}
       <li class="layui-nav-item"><a href="">退出</a></li>
     </ul>
   </div>

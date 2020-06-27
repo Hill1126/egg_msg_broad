@@ -14,7 +14,7 @@ exports.keys = 'egg_msg_borad';
 exports.view = {
   defaultViewEngine: 'nunjucks',
   mapping: {
-    '.tpl': 'nunjucks',
+    '.html': 'nunjucks',
   },
 };
 exports.news = {
@@ -45,8 +45,8 @@ exports.security = {
 };
 
 exports.middleware = [
-  'responseHandler'
-]
+  'responseHandler',
+];
 
 exports.static = {
   prefix: '/',
@@ -54,5 +54,5 @@ exports.static = {
 
 exports.multipart = {
   mode: 'stream',
-  fileSize : '10mb',
+  fileSize: '10mb',
 };

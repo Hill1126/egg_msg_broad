@@ -21,7 +21,7 @@ class CommentController extends Controller {
     const data = ctx.validate2(schema, ctx.request.body);
     data.creator = user._id;
     // 包装留言板对象
-    ctx.body = ctx.service.comment.createComment(data);
+    ctx.body = await ctx.service.comment.createComment(data);
   }
 
   /**
@@ -42,7 +42,10 @@ class CommentController extends Controller {
       search: ctx.Joi.string().default(''),
     }, ctx.request.body);
 
-    ctx.body = await ctx.service.comment.listComments(data);
+    const res = await ctx.service.comment.listComments(data);
+    // 不进行消息封装
+    ctx._pure = true;
+    await ctx.render('index.html', res);
   }
 
   async updateComment() {
