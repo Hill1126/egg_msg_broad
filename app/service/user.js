@@ -4,6 +4,13 @@ const Service = require('egg').Service;
 
 class UserService extends Service {
 
+  /**
+   * 根据账号和密码创建用户。
+   * @param {Object} userInfo
+   * @param {string} userInfo.account
+   * @param {string} userInfo.password
+   * @return {Promise<any[]>}
+   */
   async createUser(userInfo) {
     const { ctx } = this;
     return ctx.model.User.create(userInfo);
@@ -46,13 +53,13 @@ class UserService extends Service {
     }
     return user;
   }
-  
+
   /**
    * 根据stream保存图片，更新用户头像地址
    * @param stream 用户上传图片
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
-  async updateAvatar(stream){
+  async updateAvatar(stream) {
     // 判断文件后缀名
     const extname = path.extname(stream.filename).toLocaleLowerCase();
     // 设定写入的路径
@@ -61,7 +68,7 @@ class UserService extends Service {
     // 生成一个文件写入 文件流
     const writeStream = fs.createWriteStream(target);
     stream.pipe(writeStream);
-  
+
     /*
     const file = ctx.request.files[0];
     let extname =path.extname(file.filename).toLocaleLowerCase();
