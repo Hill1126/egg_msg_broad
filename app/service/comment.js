@@ -36,7 +36,7 @@ class CommentService extends Service {
    * @return {Promise<{count: DocumentQuery<any[], any, {}>, list: DocumentQuery<any[], any, {}>}>}
    */
   async listComments(data) {
-    const { pageSize, pageNum, search } = data;
+    const { pageSize, pageNum, search, account } = data;
     const { ctx } = this;
     const skip = (pageNum - 1) * pageSize;
     const where = {
@@ -48,6 +48,12 @@ class CommentService extends Service {
         $regex: new RegExp(search, 'i'),
       };
     }
+    if (account) {
+      // 根据账号查找用户信息
+      const user = await ctx.model.User.findOne({ account }, '_id');
+      where.creator = user._id;
+    }
+
     const [ list, count ] = await Promise.all([
       // 查找结果及其总数据量
       ctx.model.Comment.find(where).populate(
@@ -79,8 +85,10 @@ class CommentService extends Service {
    * @return {Promise<string>}
    */
   async deleteComment(commentId) {
-    const { ctx } = this;
-    ctx.model.Comment.findOneAndUpdate({ id: commentId }, { $set: { isDel: true } }).exec();
+    const { ctx, app } = this;
+    await ctx.model.Comment.findOneAndUpdate({ _id: app.mongoose.Types.ObjectId(commentId) },
+      { $set: { isDel: true },
+      });
   }
 
   /**

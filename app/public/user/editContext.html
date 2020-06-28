@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="/layui/css/layui.css">
+
+    <link type="text/css" href="/css/index.css" rel="stylesheet" />
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/layui/layui.js"></script>
+</head>
+<body>
+<div class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <form class="layui-form" >
+                <textarea  id="text_board" lay-verify="required" style="width:800px;" lay-reqtext="请输入留言内容" placeholder="请输入留言" class="layui-textarea"></textarea>
+                <button class="layui-btn" id="submit" lay-submit lay-filter="formDemo">修改留言</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+  <!-- 提交留言 -->
+  $('#submit').click(()=> {
+    const context = $("#text_board").val();
+    $.post('/api/comment', {context}, (data, status) => {
+        const res = data.data;
+        if (res.code === 1) {
+          layui.layer.msg(res.msg);
+        } else {
+          window.location.reload();
+        }
+      }
+    );
+  });
+</script>
+</body>
+
+</html>
