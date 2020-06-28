@@ -91,13 +91,24 @@
 <script>
   layui.use(['element','form','layer','laypage'], function(){
     const laypage = layui.laypage;
+    const pageNum = getQueryString('pageNum');
     //总页数大于页码总数
     laypage.render({
-      elem: 'demo1'
-      ,count: {{count}} //数据总数
-      ,jump: function(obj){
-        console.log(obj)
-      }
+      limit:5,
+      elem: 'demo1',
+      curr:pageNum,
+      limits:[5,10,15,20],
+      count: {{count}}, //数据总数,
+      jump: function(obj,first){
+        console.log(obj);
+        //首次不执行
+        if(first){
+          return;
+        }
+        const param = `pageNum=${obj.curr}&pageSize=${obj.limit}`
+        window.location.href= document.location.protocol + '//' +window.location.host+'/comment/xjf?'+param;
+
+      },
     });
 
   });

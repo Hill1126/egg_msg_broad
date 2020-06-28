@@ -29,3 +29,10 @@ document.getElementById('header').innerHTML = `
   </div>
 </div>
 `;
+
+// 根据参数名获取对应的url参数
+function getQueryString(name) {
+  const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+  const r = window.location.search.substr(1).match(reg);
+  if (r != null) return unescape(r[2]); return null;
+}

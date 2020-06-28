@@ -48,10 +48,10 @@ class CommentController extends Controller {
   async listMyComments() {
     const { ctx } = this;
     const data = ctx.validate2({
-      pageSize: ctx.Joi.number().integer().default(10),
+      pageSize: ctx.Joi.number().integer().default(5),
       pageNum: ctx.Joi.number().integer().default(1),
       account: ctx.Joi.string().required(),
-    }, Object.assign(ctx.request.body, ctx.params));
+    }, Object.assign(ctx.params, ctx.query));
     const res = await ctx.service.comment.listComments(data);
     ctx._pure = true;
     await this.ctx.render('myMsg.html', res);
