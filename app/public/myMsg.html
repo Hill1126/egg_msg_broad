@@ -181,9 +181,14 @@
 <script type="text/javascript" src="js/utils.js"></script>
 <script>
   layui.use(['element','form','layer','laypage'], function(){
-
-
+    laypage.render({
+      elem: 'demo1'
+      ,count: 70 //数据总数
+      ,jump: function(obj){
+        console.log(obj)
+      }
     });
+  });
 
 
 </script>
