@@ -48,7 +48,8 @@ class UserController extends Controller {
     ctx.validate({ account: 'string' }, ctx.params);
     const baseUser = await service.user.getUserBaseInfo(account);
     if (baseUser) {
-      ctx.body = baseUser;
+      ctx._pure = true;
+      await this.ctx.render('user.html', baseUser);
     } else {
       ctx.throw('用户信息未找到', 400);
     }
@@ -56,11 +57,13 @@ class UserController extends Controller {
 
   async update() {
     const { ctx, service } = this;
-    // 校验需要更新的参数的值不为空
-    ctx.validate(updateRule, ctx.request.body);
-
     // 获取数据,封装对象
-    const userInfo = ctx.helper.buildObj(updateRule, ctx.request.body);
+    const userInfo = ctx.validate2({
+      account: ctx.Joi.string().required(),
+      name: ctx.Joi.string(),
+      introduction: ctx.Joi.string(),
+    }, Object.assign(ctx.request.body, ctx.params));
+
     userInfo._id = ctx.session.user._id;
 
     ctx.body = await service.user.editUserInfo(userInfo);
@@ -101,8 +104,8 @@ class UserController extends Controller {
       _id: ctx.session.user._id,
       avatar: '/avatar/' + filename,
     };
-    let path = ctx.service.user.editUserInfo(userInfo).avatar;
-    ctx.ok(path);
+    ctx.service.user.editUserInfo(userInfo);
+    ctx.body = userInfo.avatar;
   }
 
 

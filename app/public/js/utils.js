@@ -16,12 +16,12 @@ document.getElementById('header').innerHTML = `
       </li>
       <li class="layui-nav-item">
         <a href="javascript:;">
-          <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+          <img src="http://t.cn/RCzsdCq" id="header-image" class="layui-nav-img">
           贤心
         </a>
         <dl class="layui-nav-child">
-          <dd><a href="user.html">个人中心</a></dd>
-          <dd><a href="changePass.html">修改密码</a></dd>
+          <dd><a href="/user/22">个人中心</a></dd>
+          <dd><a href="/changePass.html">修改密码</a></dd>
         </dl>
       </li>
       <li class="layui-nav-item"><a href="">退出</a></li>

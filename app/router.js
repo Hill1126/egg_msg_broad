@@ -8,7 +8,7 @@ module.exports = app => {
   const loginChecker = app.middleware.loginChecker();
 
   // 用户相关
-  router.get('/api/user/:account', controller.user.get);
+  router.get('/user/:account', controller.user.get);
   router.put('/api/user/:account', loginChecker, controller.user.update);
   router.post('/api/user/avatar', loginChecker, controller.user.updateAvatar);
 
