@@ -87,7 +87,7 @@ $.post("/api/login",
     storage.account = data.data.account;
     storage.avatar = data.data.avatar;
     // 跳转到留言板首页。
-    const url = document.location.protocol + '//' +window.location.host+'/index.html'
+    const url = document.location.protocol + '//' +window.location.host+'/comment'
     window.location = (url);
   }
 );

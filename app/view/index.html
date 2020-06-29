@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>header</title>
+  <title>留言板首页</title>
 
 
   <link rel="stylesheet" href="/layui/css/layui.css">
@@ -10,8 +10,8 @@
   <link type="text/css" href="/css/index.css" rel="stylesheet" />
 
   <script src="/js/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/utils.js"></script>
   <script src="/layui/layui.js"></script>
-
 
 
 </head>
@@ -42,16 +42,14 @@
     </fieldset>
 
     {% for item in list %}
-    <div class="layui-row">
+    <div class="layui-row" id="{{item._id}}">
       <!-- 留言名字留言内容 -->
       <div class="layui-row">
         <div class="layui-card">
           <div class="layui-card-header">
             <img src="{{item.creator.avatar}}" class="layui-nav-img"> 【{{item.creator.name}}】 <label>{{ helper.parseDateString(item.createTime) }}</label>
           </div>
-          <div class="layui-card-body">
-            {{item.context}}
-          </div>
+          <div class="layui-card-body" id="context_{{item._id}}">{{item.context}}</div>
         </div>
       </div>
       <!-- 按钮-->
@@ -60,9 +58,11 @@
           <button type="button" class="layui-btn layui-btn-sm" id="lookButton{{loop.index}}">查看评论</button>共<span>{{item.replies.length}}</span>条
         </div>
         <div class="layui-col-md3  layui-col-md-offset7">
-          <button type="button" class="layui-btn layui-btn-sm layui-btn-danger">删除</button>
-          <button type="button" class="layui-btn layui-btn-sm">编辑</button>
-          <button type="button" class="layui-btn layui-btn-sm">评论</button>
+          {% if  item.creator.editAuth %}
+          <button type="button" onclick="deleteComment('{{item._id}}')" class="layui-btn layui-btn-sm layui-btn-danger">删除</button>
+          <button type="button" onclick="editComment('{{item._id}}')" class="layui-btn layui-btn-sm">编辑</button>
+          {% endif %}
+          <button type="button" onclick="replyComment('{{item._id}}')"class="layui-btn layui-btn-sm">评论</button>
         </div>
 
       </div>
@@ -89,8 +89,9 @@
           </div>
       </div>
       {% endif %}
+      <hr>
     </div>
-    <hr>
+
     {% endfor %}
 
   <!-- 分页按钮-->
@@ -106,15 +107,104 @@
   layui.use(['element','form','layer','laypage'], function(){
     const form = layui.form;
     const laypage = layui.laypage;
+    const pageNum = getQueryVariable('pageNum');
     //总页数大于页码总数
     laypage.render({
-      elem: 'demo1'
-      ,count: {{count}} //数据总数
-      ,jump: function(obj){
-        console.log(obj)
+      limit:5,
+      elem: 'demo1',
+      curr:pageNum,
+      limits:[5,10,15,20],
+      count: {{count}}, //数据总数,
+    jump: function(obj,first){
+      console.log(obj);
+      //首次不执行
+      if(first){
+        return;
+      }
+      const param = `pageNum=${obj.curr}&pageSize=${obj.limit}`
+      window.location.href= document.location.protocol + '//' +window.location.host+'/comment?'+param;
+    },
+  });
+  });
+
+  function editComment(commentId) {
+    const contextId = "#context_"+commentId;
+    // 修改弹出框里面的内容
+    const context = $(contextId).html();
+    layer.open({
+      type: 1,
+      title: '请输入修改内容',
+      area: ['900px', '600px'],
+      shadeClose: true, //点击遮罩关闭
+      // skin: 'yourclass',
+      content: `<div class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <form class="layui-form" >
+                <textarea  id="index_board" lay-verify="required" lay-reqtext="请输入留言内容" placeholder="请输入留言" class="layui-textarea">${context}</textarea>
+                <button class="layui-btn"  onclick="updateComment('${commentId}')" lay-submit lay-filter="formDemo">修改留言</button>
+            </form>
+        </div>
+    </div>
+</div>`,
+    });
+  }
+
+  function replyComment(commentId) {
+    layer.open({
+      type: 1,
+      title: '输入回复内容',
+      area: ['900px', '600px'],
+      shadeClose: true, //点击遮罩关闭
+      content: `<div class="layui-container">
+    <div class="layui-row">
+      <form class="layui-form" >
+          <textarea  id="index_board" lay-verify="required"  lay-reqtext="请输入评论内容" placeholder="请输入评论" class="layui-textarea"></textarea>
+          <button class="layui-btn"  onclick="reply('${commentId}')" lay-submit lay-filter="formDemo">回复</button>
+      </form>
+    </div>
+</div>`,
+    });
+  }
+
+  <!-- 回复留言 -->
+  function reply(commentId){
+
+  }
+
+   <!-- 删除留言 -->
+  function deleteComment(commentId) {
+    layer.confirm('确定要删除留言吗？', {
+      btn: ['取消','确定'] //按钮
+    }, function(){
+      layer.closeAll();
+    }, function(){
+      $.ajax({
+        url:`/api/comment/${commentId}`,
+        type: 'Delete',
+        success: function(data) {
+          $(`#${commentId}`).remove();
+        }
+      });
+    });
+
+  }
+
+  <!-- 修改留言 -->
+  function updateComment(commentId) {
+    const context = $("#index_board").val();
+    $.ajax({
+      url:`/api/comment/${commentId}`,
+      data:{context:context},
+      type: 'put',
+      success: function(data) {
+        const pageNum = getQueryVariable('pageNum')||1;
+        const pageSize = getQueryVariable('pageSize')||5;
+        const param = `pageNum=${pageNum}&pageSize=${pageSize}`
+        window.location.href= document.location.protocol + '//' +window.location.host+'/comment?'+param;
       }
     });
-  });
+  }
 
   <!-- 提交留言 -->
   $('#submit').click(()=> {

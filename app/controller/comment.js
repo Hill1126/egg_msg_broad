@@ -37,10 +37,10 @@ class CommentController extends Controller {
   async listComments() {
     const { ctx } = this;
     const data = ctx.validate2({
-      pageSize: ctx.Joi.number().integer().default(10),
+      pageSize: ctx.Joi.number().integer().default(5),
       pageNum: ctx.Joi.number().integer().default(1),
       search: ctx.Joi.string().default(''),
-    }, ctx.request.body);
+    }, Object.assign(ctx.params, ctx.query));
 
     const res = await ctx.service.comment.listComments(data);
     // 不进行消息封装

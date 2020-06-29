@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/layui/css/layui.css">
     <link rel="stylesheet" href="/css/user.css">
 
+    <script type="text/javascript" src="/js/utils.js"></script>
     <script src="/js/jquery.min.js"></script>
 </head>
 <body >
@@ -33,7 +34,7 @@
                     <div class="layui-row" >
                         <div class="layui-card">
                             <div class="layui-card-header">
-                                <img src="{{item.creator.avatar}}" class="layui-nav-img">  【{{item.creator.name}}】  <label>{{item.createTime}}</label>
+                                <img src="{{item.creator.avatar}}" class="layui-nav-img">  【{{item.creator.name}}】  <label>{{ helper.parseDateString(item.createTime) }}</label>
                             </div>
                             <div class="layui-card-body" id="context_{{item._id}}">{{item.context}}</div>
                         </div>
@@ -88,11 +89,11 @@
 </div>
 
 <script src="/layui/layui.js"></script>
-<script type="text/javascript" src="/js/utils.js"></script>
+
 <script>
   layui.use(['element','form','layer','laypage'], function(){
     const laypage = layui.laypage;
-    const pageNum = getQueryString('pageNum');
+    const pageNum = getQueryVariable('pageNum');
     //总页数大于页码总数
     laypage.render({
       limit:5,
@@ -135,8 +136,6 @@
     </div>
 </div>`,
     });
-
-
   }
 
   <!-- 提交留言 -->
@@ -147,7 +146,12 @@
       data:{context:context},
       type: 'put',
       success: function(data) {
-       layer.msg('更新成功');
+        const pageNum = getQueryVariable('pageNum')||1;
+        const pageSize = getQueryVariable('pageSize')||5;
+        const param = `pageNum=${pageNum}&pageSize=${pageSize}`
+        const oldHref = window.location.href;
+        const link = oldHref.split('?')[0];
+        window.location.href= link+'?'+param;
       }
     });
   }
@@ -166,7 +170,6 @@
         }
       });
     });
-
   }
 
 </script>

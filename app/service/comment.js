@@ -30,9 +30,10 @@ class CommentService extends Service {
   /**
    * 列出留言，支持搜索和分页
    * @param {object}data
-   * @param {int} pageSize 数据显示大小
-   * @param {int} pageNum  当前页数
-   * @param {String} search 搜索关键字
+   * @param {int} data.pageSize 数据显示大小
+   * @param {int} data.pageNum  当前页数
+   * @param {String} data.search 搜索关键字
+   * @param {String} data.account 用户账号，用于对留言的筛选
    * @return {Promise<{count: DocumentQuery<any[], any, {}>, list: DocumentQuery<any[], any, {}>}>}
    */
   async listComments(data) {
@@ -53,16 +54,20 @@ class CommentService extends Service {
       const user = await ctx.model.User.findOne({ account }, '_id');
       where.creator = user._id;
     }
+    const currLoginAct = ctx.session.user.account;
 
     const [ list, count ] = await Promise.all([
       // 查找结果及其总数据量
       ctx.model.Comment.find(where).populate(
-        { path: 'creator', select: 'name avatar' }
+        { path: 'creator', select: 'name avatar account' }
       ).limit(pageSize)
         .skip(skip)
         .sort({ createTime: -1 }),
-      ctx.model.Comment.count(where),
+      ctx.model.Comment.count(where).lean(),
     ]);
+    list.forEach(item => {
+      item.creator.editAuth = currLoginAct === item.creator.account;
+    });
     return { count, list };
   }
 
