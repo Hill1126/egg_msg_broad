@@ -37,10 +37,10 @@ class UserController extends Controller {
   }
 
   /**
-   * 获取当前登录用户信息
+   * 根据用户账号 获取相关信息。
    * @return {Promise<void>}
    */
-  async get() {
+  async getByAccount() {
     const { ctx, service } = this;
     // 验证id是否存在
     const account = ctx.params.account;
@@ -53,6 +53,16 @@ class UserController extends Controller {
     } else {
       ctx.throw('用户信息未找到', 400);
     }
+  }
+
+  /**
+   * 获取当前登录用户信息
+   * @return {Promise<void>}
+   */
+  async get() {
+    const { ctx, service } = this;
+    const account = ctx.session.user.account;
+    ctx.body = await service.user.getUserBaseInfo(account);
   }
 
   async update() {

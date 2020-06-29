@@ -13,7 +13,9 @@
 <body bgcolor="#F2F2F2">
 
 <!-- 头部信息 -->
-<div id="header"></div>
+<div id="header">
+    {% include  "header.html" %}
+</div>
 
 <!-- 青色分割线-->
 
@@ -61,18 +63,7 @@
 
 </div>
 
-
-
-<script type="text/javascript" src="/js/utils.js"></script>
 <script>
-
-    // 更新用户信息
-    function update(){
-
-
-
-    }
-
 
   //一般直接写在一个js文件中
   layui.use(['upload','element','form'], function(){

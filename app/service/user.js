@@ -1,6 +1,8 @@
 'use strict';
 
 const Service = require('egg').Service;
+const path = require('path');
+const fs = require('fs');
 
 class UserService extends Service {
 
@@ -59,7 +61,20 @@ class UserService extends Service {
    * @param stream 用户上传图片
    * @return {Promise<void>}
    */
-  async updateAvatar(stream) {
+  async updateAvatar(stream, userId) {
+
+    const { ctx } = this;
+    const url = await this.saveFile(stream);
+    // 更新用户头像资料
+    const userInfo = {
+      _id: userId || ctx.session.user._id,
+      avatar: url,
+    };
+    ctx.service.user.editUserInfo(userInfo).avatar;
+    return url;
+  }
+
+  async saveFile(stream) {
     // 判断文件后缀名
     const extname = path.extname(stream.filename).toLocaleLowerCase();
     // 设定写入的路径
@@ -68,28 +83,7 @@ class UserService extends Service {
     // 生成一个文件写入 文件流
     const writeStream = fs.createWriteStream(target);
     stream.pipe(writeStream);
-
-    /*
-    const file = ctx.request.files[0];
-    let extname =path.extname(file.filename).toLocaleLowerCase();
-    if ( (!extname.includes('jpg') && !extname.includes('png') )){
-      ctx.fail(undefined,'请上传jpg、png格式的图片');
-      return;
-    }
-
-    //设定写入的路径
-    let filepath = path.join('/','avatar', Date.now()+extname)
-    const target = path.join(this.config.baseDir, 'app/public/avatar',filepath);
-    fs.writeFile(target,file,err =>{
-      ctx.logger.error(err);
-    });
-    */
-    // 更新用户头像资料
-    const userInfo = {
-      _id: ctx.session.user._id,
-      avatar: '/avatar/' + filename,
-    };
-    let path = ctx.service.user.editUserInfo(userInfo).avatar;
+    return '/avatar/' + filename;
   }
 
 

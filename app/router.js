@@ -8,7 +8,8 @@ module.exports = app => {
   const loginChecker = app.middleware.loginChecker();
 
   // 用户相关
-  router.get('/user/:account', controller.user.get);
+  router.get('/user/:account', controller.user.getByAccount);
+  router.get('/api/user', loginChecker, controller.user.get);
   router.put('/api/user/:account', loginChecker, controller.user.update);
   router.post('/api/user/avatar', loginChecker, controller.user.updateAvatar);
 
@@ -20,7 +21,7 @@ module.exports = app => {
 
   // 留言板相关
   router.post('/api/comment', loginChecker, controller.comment.createComment);
-  router.get('/api/comment', controller.comment.listComments);
+  router.get('/comment', controller.comment.listComments);
   router.get('/api/comment/:id', controller.comment.getComment);
   router.put('/api/comment/:id', loginChecker, controller.comment.updateComment);
   router.delete('/api/comment/:id', loginChecker, controller.comment.deleteComment);
