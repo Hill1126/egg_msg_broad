@@ -60,7 +60,9 @@ class CommentService extends Service {
       // 查找结果及其总数据量
       ctx.model.Comment.find(where).populate(
         { path: 'creator', select: 'name avatar account' }
-      ).limit(pageSize)
+      ).populate({ path: 'replies.toUser', select: 'name account' })
+        .populate({ path: 'replies.createUser', select: 'name account' })
+        .limit(pageSize)
         .skip(skip)
         .sort({ createTime: -1 }),
       ctx.model.Comment.count(where).lean(),
@@ -130,20 +132,18 @@ class CommentService extends Service {
   /**
    * 删除留言中的评论
    * @param {object} data
-   * @param {objectId} data.id 留言板id
+   * @param {objectId} data.commentId 留言板id
    * @param {objectId} data.replyId 留言回复id
    * @return {Promise<void>}
    */
   async deleteReply(data) {
     const { ctx, app } = this;
-    ctx.model.Comment.update(
+    await ctx.model.Comment.findOneAndUpdate(
       {
-        _id: app.mongoose.Types.ObjectId(data.data.id),
-        replies: { $elemMatch: { _id: app.mongoose.Types.ObjectId(data.replyId) } },
+        _id: app.mongoose.Types.ObjectId(data.commentId),
+       // replies: { $elemMatch: { _id: app.mongoose.Types.ObjectId(data.replyId) } },
       },
-      {
-        $set: { 'replies.$.isDel': true },
-      }
+      { $pull: { replies: { _id: app.mongoose.Types.ObjectId(data.replyId) } } }
     );
   }
 

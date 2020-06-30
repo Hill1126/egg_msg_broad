@@ -1,6 +1,8 @@
 'use strict';
 
 const { app, assert } = require('egg-mock/bootstrap');
+const fs = require('fs');
+const path = require('path');
 
 describe('test/service/user.test.js', () => {
 
@@ -47,6 +49,13 @@ describe('test/service/user.test.js', () => {
     const account = 'test';
     const info = await ctx.service.user.getUserBaseInfo(account);
     assert(info);
+  });
+
+  it('should upload success', async function() {
+    const ctx = app.mockContext();
+    const readStream = fs.createReadStream(path.join(app.baseDir, 'app/public/image', 'avatar.png'));
+    const url = await ctx.service.user.saveFile(readStream);
+    assert(url);
   });
 
 

@@ -36,16 +36,23 @@ module.exports = {
    */
   parseDateString(date) {
     const year = date.getFullYear();
-    let month = date.getMonth()+1;
+    let month = date.getMonth() + 1;
     let dt = date.getDate();
-
+    let min = date.getMinutes();
+    let seconds = date.getSeconds();
     if (dt < 10) {
       dt = '0' + dt;
     }
     if (month < 10) {
       month = '0' + month;
     }
-    return `${year}-${month}-${dt} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    if (min < 10) {
+      min = '0' + min;
+    }
+    if (seconds < 10) {
+      seconds = '0' + seconds;
+    }
+    return `${year}-${month}-${dt} ${date.getHours()}:${min}:${seconds}`;
   },
 
 

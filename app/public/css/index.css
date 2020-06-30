@@ -146,6 +146,8 @@ margin-bottom: 40px;
     clear:both;
     width:1140px;
     margin:4px auto;
+    word-break: break-all;
+    word-wrap: break-word;
 
 }
 .reply_name {
