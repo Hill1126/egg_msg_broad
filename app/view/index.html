@@ -55,7 +55,7 @@
       <!-- 按钮-->
       <div class="layui-row" >
         <div class="layui-col-md2">
-          <button type="button" class="layui-btn layui-btn-sm" id="lookButton{{loop.index}}">查看评论</button>共<span id="{{item._id}}Count">{{item.replies.length}}</span>条
+          <button type="button" class="layui-btn layui-btn-sm" onclick="toggleReply('{{item._id}}')">查看评论</button>共<span id="{{item._id}}Count">{{item.replies.length}}</span>条
         </div>
         <div class="layui-col-md3  layui-col-md-offset7">
           {% if  item.creator.editAuth %}
@@ -67,29 +67,31 @@
 
       </div>
       {% if item.replies.length>0 %}
-      <!-- 回复-->
-      {% for reply in item.replies %}
-      <div class="layui-row" >
-          <div class="reply_list" id="reply_list" >
+        <!-- 回复-->
+      <div id="reply_list{{item._id}}" style="display: none">
+        {% for reply in item.replies %}
+        <div class="layui-row" >
+            <div class="reply_list"  >
 
-              <div class="reply"  id="{{reply._id}}">
-                <span class="reply_name">{{reply.createUser.name}}</span>回复<span class="reply_name">{{reply.toUser.name}}</span>：<span class="reply_content" id="context_{{reply._id}}">{{reply.context}}</span>
-                {% if ctx.session.user.account === reply.createUser.account %}
-                <a  data-id="1" class="del_reply">
-                  <i class="icon layui-icon" onclick="deleteReply('{{item._id}}','{{reply._id}}')" style=" cursor:pointer;" >删除</i>
-                </a>
-                <a  data-id="1" class="del_reply">
-                  <i class="icon layui-icon" onclick="openEditReply('{{item._id}}','{{reply._id}}')" style=" cursor:pointer;" >编辑</i>&nbsp;&nbsp;
-                </a>
-                {% endif %}
+                <div class="reply"  id="{{reply._id}}">
+                  <span class="reply_name">{{reply.createUser.name}}</span>回复<span class="reply_name">{{reply.toUser.name}}</span>：<span class="reply_content" id="context_{{reply._id}}">{{reply.context}}</span>
+                  {% if ctx.session.user.account === reply.createUser.account %}
+                  <a  data-id="1" class="del_reply">
+                    <i class="icon layui-icon" onclick="deleteReply('{{item._id}}','{{reply._id}}')" style=" cursor:pointer;" >删除</i>
+                  </a>
+                  <a  data-id="1" class="del_reply">
+                    <i class="icon layui-icon" onclick="openEditReply('{{item._id}}','{{reply._id}}')" style=" cursor:pointer;" >编辑</i>&nbsp;&nbsp;
+                  </a>
+                  {% endif %}
 
-                <a  data-id="1" class="del_reply">
-                  <i class="icon layui-icon" onclick="replyComment('{{item._id}}','{{reply.createUser._id}}')" style=" cursor:pointer;">回复</i>&nbsp;&nbsp;
-                </a>
-              </div>
-          </div>
+                  <a  data-id="1" class="del_reply">
+                    <i class="icon layui-icon" onclick="replyComment('{{item._id}}','{{reply.createUser._id}}')" style=" cursor:pointer;">回复</i>&nbsp;&nbsp;
+                  </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
       {% endif %}
       <hr>
     </div>
@@ -310,9 +312,10 @@
   });
 
 
-  $("#lockComment2").click(function(){
-    $(".reply_list").toggle();
-  });
+  function toggleReply(commentId){
+    $(`#reply_list${commentId}`).toggle();
+  }
+
 
 
 </script>

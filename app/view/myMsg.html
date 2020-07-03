@@ -5,6 +5,7 @@
     <title>我的留言记录</title>
     <link rel="stylesheet" href="/layui/css/layui.css">
     <link rel="stylesheet" href="/css/user.css">
+    <link type="text/css" href="/css/index.css" rel="stylesheet" />
 
     <script type="text/javascript" src="/js/utils.js"></script>
     <script src="/js/jquery.min.js"></script>
@@ -41,7 +42,7 @@
                     </div>
                     <div class="layui-row" >
                         <div class="layui-col-md2">
-                            <button type="button" class="layui-btn layui-btn-sm" id="lockComment2">查看评论</button>共<span>{{item.replies.length}}</span>条
+                            <button type="button" class="layui-btn layui-btn-sm" onclick="toggleReply('{{item._id}}')">查看评论</button>共<span>{{item.replies.length}}</span>条
                         </div>
                         <div class="layui-col-md3  layui-col-md-offset7">
                             <button type="button" onclick="deleteComment('{{item._id}}')" class="layui-btn layui-btn-sm layui-btn-danger">删除</button>
@@ -51,21 +52,23 @@
                     </div>
 
                     {% if item.replies.length > 0%}
-                    <div class="comment">
-                        <div class="reply_list" id="reply_list1" >
-                            <div class="reply" >
-                                <span class="reply_name">小白</span>回复<span class="reply_name">小黑</span>：<span class="reply_content">你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好 </span>
-                                <a  data-id="1" class="del_reply">
-                                    <i class="icon layui-icon " >    删除</i>
-                                </a>
-                            </div>
-                            <div class="reply">
-                                <span class="reply_name">小白</span>回复<span class="reply_name">小黑</span>：<span class="reply_content">你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊你好没啊 </span>
-                                <a  data-id="1" class="del_reply">
-                                    <i class="icon layui-icon" >    删除</i>
-                                </a>
+                    <div id="reply_list{{item._id}}" style="display: none">
+                        <!-- 回复-->
+                        {% for reply in item.replies %}
+                        <div class="layui-row" >
+                            <div class="reply_list" id="reply_list" >
+
+                                <div class="reply"  id="{{reply._id}}">
+                                    <span class="reply_name">{{reply.createUser.name}}</span>回复<span class="reply_name">{{reply.toUser.name}}</span>：<span class="reply_content" id="context_{{reply._id}}">{{reply.context}}</span>
+
+                                    <a  data-id="1" class="del_reply">
+                                        <i class="icon layui-icon" onclick="deleteReply('{{item._id}}','{{reply._id}}')" style=" cursor:pointer;" >删除</i>
+                                    </a>
+
+                                </div>
                             </div>
                         </div>
+                        {% endfor %}
                     </div>
                     {% endif %}
 
@@ -156,6 +159,31 @@
     });
   }
 
+  // 删除回复
+  function deleteReply(commentId,replyId){
+    layer.confirm('确定要删除回复吗？', {
+      btn: ['取消','确定'] //按钮
+    }, function(){
+      layer.closeAll();
+    }, function(){
+      $.ajax({
+        url:`/api/reply/${commentId}/${replyId}`,
+        type: 'Delete',
+        success: function(data) {
+          if (data!==1){
+            $(`#${replyId}`).remove();
+            const countSpan =  $(`#${commentId}Count`);
+            const num = countSpan.text();
+            countSpan.text(num-1);
+          }else{
+            layer.msg('删除回复失败')
+          }
+        }
+      });
+    });
+
+  }
+
   function deleteComment(commentId) {
     layer.confirm('确定要删除留言吗？', {
       btn: ['取消','确定'] //按钮
@@ -171,6 +199,12 @@
       });
     });
   }
+
+
+  function toggleReply(commentId){
+    $(`#reply_list${commentId}`).toggle();
+  }
+
 
 </script>
 </body>
