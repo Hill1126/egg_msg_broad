@@ -26,6 +26,18 @@ class AuthController extends Controller {
     ctx.body = user;
   }
 
+  async changePassword() {
+    const { ctx } = this;
+    const data = ctx.validate2({
+      newPass: ctx.Joi.string(),
+      oldPass: ctx.Joi.string(),
+      account: ctx.Joi.string(),
+    }, Object.assign(ctx.request.body, ctx.params, ctx.query));
+
+    await ctx.service.user.changePassword(data);
+    ctx.body = '修改成功';
+  }
+
   async logout() {
     // 删除用户session
     const { ctx } = this;

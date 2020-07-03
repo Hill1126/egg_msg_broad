@@ -26,13 +26,13 @@ module.exports = () => {
       const res = {
         code: 0,
         data: ctx.body,
-        msg: 'success',
+        msg: ctx.msg || 'success',
       };
       if (ctx.status === 404) {
         res.msg = '接口未找到';
         res.code = 404;
       }
-      ctx.response.body = res;
+      ctx.body = res;
     }
   };
 

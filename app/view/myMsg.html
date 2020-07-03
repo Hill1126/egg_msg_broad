@@ -52,7 +52,7 @@
                     </div>
 
                     {% if item.replies.length > 0%}
-                    <div id="reply_list{{item._id}}" style="display: none">
+                    <div id="reply_list{{item._id}}" {% if item.replies.length>5 %} style="display: none" {% endif %}>
                         <!-- 回复-->
                         {% for reply in item.replies %}
                         <div class="layui-row" >

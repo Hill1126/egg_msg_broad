@@ -57,6 +57,27 @@ class UserService extends Service {
   }
 
   /**
+   * 根据旧密码修改新密码
+   * @param {Object} data
+   * @param {string} data.newPass 输入的新密码
+   * @param {string} data.oldPass  旧密码
+   * @return {Promise<void>}
+   */
+  async changePassword(data) {
+    const { ctx } = this;
+    const { user } = ctx.session;
+    const res = await ctx.model.User.findOne({
+      account: user.account,
+      password: data.oldPass,
+    });
+    if (!res) {
+      ctx.throw('密码错误，修改失败');
+    }
+    res.password = data.newPass;
+    res.save();
+  }
+
+  /**
    * 根据stream保存图片，更新用户头像地址
    * @param stream 用户上传图片
    * @return {Promise<void>}

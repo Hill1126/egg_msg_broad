@@ -118,6 +118,11 @@ class UserController extends Controller {
     ctx.body = userInfo.avatar;
   }
 
+  async passwordPage() {
+    this.ctx._pure = true;
+    await this.ctx.render('changePass.html');
+  }
+
 
 }
 

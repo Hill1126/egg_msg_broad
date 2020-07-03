@@ -8,12 +8,25 @@
         </ul>
         <ul class="layui-nav layui-layout-right" id="right">
             <li class="layui-nav-item">
-                <a href="javascript:;" id="myComment">我的留言</a>
+                <a href="/comment/{{ctx.session.user.account}}" id="myComment">我的留言</a>
             </li>
             <li class="layui-nav-item" id="userBanner">
+                {% if ctx.session.user === null%}
                 <a href="/login.html">
                     请登录
                 </a>
+                {% else %}
+                    <li class="layui-nav-item">
+                        <a href="javascript:;" id="nameLink">
+                            <img src="{{ctx.session.user.avatar}}" id="header-image"  class="layui-nav-img">
+                            {{ctx.session.user.name}}
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="/user/{{ctx.session.user.account}}" id="personCenter">个人中心</a></dd>
+                            <dd><a href="/user/{{ctx.session.user.account}}/password">修改密码</a></dd>
+                        </dl>
+                    </li>
+                {% endif %}
             </li>
             <li class="layui-nav-item"><a onclick="exit()" href="/api/exit">退出</a></li>
         </ul>
@@ -21,31 +34,31 @@
 </div>
 
 <script>
-    // 获取用户信息，并更新到导航栏
-    window.onload = ()=>{
-      $.get('/api/user',
-        {},
-        (data)=>{
-            if (data.code===0){
-              const userInfo = data.data;
-
-              let html = `<li class="layui-nav-item">
-                <a href="javascript:;" id="nameLink">
-                    <img src="${userInfo.avatar}" id="header-image"  class="layui-nav-img">
-                    ${userInfo.name}
-                </a>
-                <dl class="layui-nav-child">
-                    <dd><a href="/user/${userInfo.account}" id="personCenter">个人中心</a></dd>
-                    <dd><a href="">修改密码</a></dd>
-                </dl>
-            </li>`;
-
-              $('#myComment').attr("href","/comment/"+userInfo.account);
-              $('#userBanner').html(html);
-            }
-        },
-      );
-    }
+    // // 获取用户信息，并更新到导航栏
+    // window.onload = ()=>{
+    //   $.get('/api/user',
+    //     {},
+    //     (data)=>{
+    //         if (data.code===0){
+    //           const userInfo = data.data;
+    //
+    //           let html = `<li class="layui-nav-item">
+    //             <a href="javascript:;" id="nameLink">
+    //                 <img src="${userInfo.avatar}" id="header-image"  class="layui-nav-img">
+    //                 ${userInfo.name}
+    //             </a>
+    //             <dl class="layui-nav-child">
+    //                 <dd><a href="/user/${userInfo.account}" id="personCenter">个人中心</a></dd>
+    //                 <dd><a href="">修改密码</a></dd>
+    //             </dl>
+    //         </li>`;
+    //
+    //           $('#myComment').attr("href","/comment/"+userInfo.account);
+    //           $('#userBanner').html(html);
+    //         }
+    //     },
+    //   );
+    // }
 
     function exit(){
       $.post('/api/exit',function (data,status) {
