@@ -53,7 +53,7 @@ class CommentController extends Controller {
     const data = ctx.validate2({
       pageSize: ctx.Joi.number().integer().default(5),
       pageNum: ctx.Joi.number().integer().default(1),
-      account: ctx.Joi.string().required(),
+      account: ctx.Joi.string(),
     }, Object.assign(ctx.params, ctx.query));
     const res = await ctx.service.comment.listComments(data);
     ctx._pure = true;
@@ -100,15 +100,20 @@ class CommentController extends Controller {
     await ctx.service.comment.deleteReply(data);
     ctx.body = 'ok';
   }
-  
 
-  // async listReplies(){
-  //   const { ctx } = this;
-  //
-  //   const data = ctx.validate2({
-  //
-  //     },ctx.)
-  // }
+
+  async updateReply() {
+    const { ctx } = this;
+
+    const schema = {
+      context: ctx.Joi.string().required(),
+      replyId: ctx.Joi.string().required(),
+      commentId: ctx.Joi.string().required(),
+    };
+    const data = ctx.validate2(schema, Object.assign(ctx.request.body, ctx.params));
+    await ctx.service.comment.updateReply(data);
+    ctx.body = 'ok';
+  }
 
 }
 

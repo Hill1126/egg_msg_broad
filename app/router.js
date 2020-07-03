@@ -31,7 +31,7 @@ module.exports = app => {
   // 回复留言相关
   router.post('/api/reply/:commentId', loginChecker, controller.comment.createReply);
   router.delete('/api/reply/:commentId/:replyId', loginChecker, controller.comment.deleteReply);
-
+  router.put('/api/reply/:commentId/:replyId', loginChecker, controller.comment.updateReply);
 
 };
 

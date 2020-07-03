@@ -31,6 +31,7 @@ class AuthController extends Controller {
     const { ctx } = this;
     //
     ctx.session.user = null;
+    ctx.body = 'success';
   }
 
 

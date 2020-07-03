@@ -54,7 +54,7 @@ class CommentService extends Service {
       const user = await ctx.model.User.findOne({ account }, '_id');
       where.creator = user._id;
     }
-    const currLoginAct = ctx.session.user.account;
+    const currLoginAct = ctx.session.user ? ctx.session.user.account : 'none';
 
     const [ list, count ] = await Promise.all([
       // 查找结果及其总数据量
@@ -67,9 +67,11 @@ class CommentService extends Service {
         .sort({ createTime: -1 }),
       ctx.model.Comment.count(where).lean(),
     ]);
-    list.forEach(item => {
-      item.creator.editAuth = currLoginAct === item.creator.account;
-    });
+    if (currLoginAct !== 'none') {
+      list.forEach(item => {
+        item.creator.editAuth = currLoginAct === item.creator.account;
+      });
+    }
     return { count, list };
   }
 
@@ -141,9 +143,28 @@ class CommentService extends Service {
     await ctx.model.Comment.findOneAndUpdate(
       {
         _id: app.mongoose.Types.ObjectId(data.commentId),
-       // replies: { $elemMatch: { _id: app.mongoose.Types.ObjectId(data.replyId) } },
+        // replies: { $elemMatch: { _id: app.mongoose.Types.ObjectId(data.replyId) } },
       },
       { $pull: { replies: { _id: app.mongoose.Types.ObjectId(data.replyId) } } }
+    );
+  }
+
+  /**
+   * 更新留言中的评论
+   * @param {object} data
+   * @param {objectId} data.commentId 留言板id
+   * @param {objectId} data.replyId 留言回复id
+   * @param {string} data.context 要更新的回复内容
+   * @return {Promise<void>}
+   */
+  async updateReply(data) {
+    const { ctx, app } = this;
+    await ctx.model.Comment.findOneAndUpdate(
+      {
+        _id: app.mongoose.Types.ObjectId(data.commentId),
+        'replies._id': app.mongoose.Types.ObjectId(data.replyId),
+      },
+      { $set: { 'replies.$.context': data.context } }
     );
   }
 

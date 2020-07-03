@@ -15,7 +15,7 @@
                     请登录
                 </a>
             </li>
-            <li class="layui-nav-item"><a href="">退出</a></li>
+            <li class="layui-nav-item"><a onclick="exit()" href="/api/exit">退出</a></li>
         </ul>
     </div>
 </div>
@@ -46,4 +46,15 @@
         },
       );
     }
+
+    function exit(){
+      $.post('/api/exit',function (data,status) {
+        if (data.code !== 0){
+          window.location.href= document.location.protocol + '//' +window.location.host+'/login.html';
+        }else{
+          layer.msg('退出失败');
+        }
+      })
+    }
+
 </script>

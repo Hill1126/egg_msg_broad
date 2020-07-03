@@ -73,13 +73,13 @@
           <div class="reply_list" id="reply_list" >
 
               <div class="reply"  id="{{reply._id}}">
-                <span class="reply_name">{{reply.createUser.name}}</span>回复<span class="reply_name">{{reply.toUser.name}}</span>：<span class="reply_content">{{reply.context}}</span>
+                <span class="reply_name">{{reply.createUser.name}}</span>回复<span class="reply_name">{{reply.toUser.name}}</span>：<span class="reply_content" id="context_{{reply._id}}">{{reply.context}}</span>
                 {% if ctx.session.user.account === reply.createUser.account %}
                 <a  data-id="1" class="del_reply">
                   <i class="icon layui-icon" onclick="deleteReply('{{item._id}}','{{reply._id}}')" style=" cursor:pointer;" >删除</i>
                 </a>
                 <a  data-id="1" class="del_reply">
-                  <i class="icon layui-icon" style=" cursor:pointer;" >编辑</i>&nbsp;&nbsp;
+                  <i class="icon layui-icon" onclick="openEditReply('{{item._id}}','{{reply._id}}')" style=" cursor:pointer;" >编辑</i>&nbsp;&nbsp;
                 </a>
                 {% endif %}
 
@@ -119,18 +119,57 @@
       curr:pageNum,
       limits:[5,10,15,20],
       count: {{count}}, //数据总数,
-    jump: function(obj,first){
-      console.log(obj);
-      //首次不执行
-      if(first){
-        return;
+      jump: function(obj,first){
+        console.log(obj);
+        //首次不执行
+        if(first){
+          return;
+        }
+        const param = `pageNum=${obj.curr}&pageSize=${obj.limit}`
+        window.location.href= document.location.protocol + '//' +window.location.host+'/comment?'+param;
       }
-      const param = `pageNum=${obj.curr}&pageSize=${obj.limit}`
-      window.location.href= document.location.protocol + '//' +window.location.host+'/comment?'+param;
-    },
-  });
+    });
   });
 
+
+
+  function openEditReply(commentId,replyId) {
+    const contextId = "#context_"+replyId;
+    // 修改弹出框里面的内容
+    const context = $(contextId).html();
+    layer.open({
+      type: 1,
+      title: '请输入修改内容',
+      area: ['900px', '600px'],
+      shadeClose: true, //点击遮罩关闭
+      // skin: 'yourclass',
+      content: `<div class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <form class="layui-form" >
+                <textarea  id="replyEditBoard" lay-verify="required" lay-reqtext="请输入留言内容" placeholder="请输入留言" class="layui-textarea">${context}</textarea>
+                <button class="layui-btn"  onclick="updateReply('${commentId}','${replyId}')" lay-submit lay-filter="formDemo">修改回复</button>
+            </form>
+        </div>
+    </div>
+</div>`,
+    });
+  }
+
+  function updateReply(commentId,replyId){
+    const context = $("#replyEditBoard").val();
+    $.ajax({
+      url:`/api/reply/${commentId}/${replyId}`,
+      data:{context:context},
+      type: 'Put',
+      success: function(data) {
+        const pageNum = getQueryVariable('pageNum')||1;
+        const pageSize = getQueryVariable('pageSize')||5;
+        const param = `pageNum=${pageNum}&pageSize=${pageSize}`
+        window.location.href= document.location.protocol + '//' +window.location.host+'/comment?'+param;
+      }
+    });
+  }
 
 
   // 删除回复
@@ -158,6 +197,9 @@
 
   }
 
+
+
+  // 打开修改窗口
   function editComment(commentId) {
     const contextId = "#context_"+commentId;
     // 修改弹出框里面的内容
@@ -180,6 +222,8 @@
 </div>`,
     });
   }
+
+
 
   function replyComment(commentId,creatorId) {
     layer.open({
@@ -247,6 +291,8 @@
       }
     });
   }
+
+
 
   <!-- 提交留言 -->
   $('#submit').click(()=> {
