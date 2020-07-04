@@ -23,7 +23,7 @@ module.exports = app => {
   // 留言板相关
   router.post('/api/comment', loginChecker, controller.comment.createComment);
   router.get('/comment', controller.comment.listComments);
-  router.get('/api/comment/:id', controller.comment.getComment);
+  // router.get('/api/comment/:id', controller.comment.getComment);
   router.put('/api/comment/:id', loginChecker, controller.comment.updateComment);
   router.delete('/api/comment/:id', loginChecker, controller.comment.deleteComment);
 

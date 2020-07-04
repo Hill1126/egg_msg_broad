@@ -10,16 +10,13 @@ class CommentController extends Controller {
    * @return {Promise<void>}
    */
   async createComment() {
-    // 获取当前用户信息
-    const { ctx } = this;
-    const user = ctx.session.user;
 
+    const { ctx } = this;
     const schema = {
       context: ctx.Joi.string().required(),
     };
     // 进行参数校验
     const data = ctx.validate2(schema, ctx.request.body);
-    data.creator = user._id;
     // 包装留言板对象
     ctx.body = await ctx.service.comment.createComment(data);
   }

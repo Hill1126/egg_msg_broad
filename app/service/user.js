@@ -71,7 +71,7 @@ class UserService extends Service {
       password: data.oldPass,
     });
     if (!res) {
-      ctx.throw('密码错误，修改失败');
+      ctx.throw('password,worng!');
     }
     res.password = data.newPass;
     res.save();
@@ -79,7 +79,8 @@ class UserService extends Service {
 
   /**
    * 根据stream保存图片，更新用户头像地址
-   * @param stream 用户上传图片
+   * @param {object} stream 用户上传图片
+   * @param {objectId} userId 用户id
    * @return {Promise<void>}
    */
   async updateAvatar(stream, userId) {
@@ -95,6 +96,11 @@ class UserService extends Service {
     return url;
   }
 
+  /**
+   * 根据egg封装的stream保存到磁盘中。
+   * @param stream mutilPartStream,egg封装过的stream
+   * @return {Promise<string>}
+   */
   async saveFile(stream) {
     // 判断文件后缀名
     const extname = path.extname(stream.filename).toLocaleLowerCase();

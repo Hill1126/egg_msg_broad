@@ -8,10 +8,12 @@ class CommentService extends Service {
    *
    * @param {object}data
    * @param {string}data.context 留言内容
+   * @param {objectId} data.creator 留言者id
    * @return {Promise<void>}
    */
   async createComment(data) {
     const { ctx } = this;
+    data.creator = ctx.session.user._id;
     return await ctx.model.Comment.create(data);
 
   }
@@ -21,11 +23,11 @@ class CommentService extends Service {
    * @param {string} commentId 评论id
    * @return {Promise<void>}
    */
-  async getComment(commentId) {
-    const { ctx } = this;
-    // todo 添加未删除筛选
-    return ctx.model.Comment.findById(commentId);
-  }
+  // async getComment(commentId) {
+  //   const { ctx } = this;
+  //   // todo 添加未删除筛选
+  //   return ctx.model.Comment.findById(commentId);
+  // }
 
   /**
    * 列出留言，支持搜索和分页
@@ -65,7 +67,7 @@ class CommentService extends Service {
         .limit(pageSize)
         .skip(skip)
         .sort({ createTime: -1 }),
-      ctx.model.Comment.count(where).lean(),
+      ctx.model.Comment.countDocuments(where),
     ]);
     if (currLoginAct !== 'none') {
       list.forEach(item => {
@@ -78,8 +80,8 @@ class CommentService extends Service {
   /**
    *
    * @param {object} data
-   * @param {objectId} data.id
-   * @param {string} data.context
+   * @param {objectId} data.id 留言的id
+   * @param {string} data.context 修改的内容
    * @return {Promise<void>}
    */
   async updateComment(data) {
@@ -118,7 +120,7 @@ class CommentService extends Service {
     };
     const where = {
       isDel: false,
-      _id: data.commentId,
+      _id: app.mongoose.Types.ObjectId(data.commentId),
     };
 
     // 插入留言回复中
@@ -134,8 +136,8 @@ class CommentService extends Service {
   /**
    * 删除留言中的评论
    * @param {object} data
-   * @param {objectId} data.commentId 留言板id
-   * @param {objectId} data.replyId 留言回复id
+   * @param {string} data.commentId 留言板id
+   * @param {string} data.replyId 留言回复id
    * @return {Promise<void>}
    */
   async deleteReply(data) {

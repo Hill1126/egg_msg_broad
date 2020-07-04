@@ -85,37 +85,8 @@ class UserController extends Controller {
 
     // 文件流上传形式
     const stream = await ctx.getFileStream();
-    // 判断文件后缀名
-    const extname = path.extname(stream.filename).toLocaleLowerCase();
-    // 设定写入的路径
-    const filename = Date.now() + extname;
-    const target = path.join(this.config.baseDir, 'app/public/avatar', filename);
-    // 生成一个文件写入 文件流
-    const writeStream = fs.createWriteStream(target);
-    stream.pipe(writeStream);
-
-    /*
-    const file = ctx.request.files[0];
-    let extname =path.extname(file.filename).toLocaleLowerCase();
-    if ( (!extname.includes('jpg') && !extname.includes('png') )){
-      ctx.fail(undefined,'请上传jpg、png格式的图片');
-      return;
-    }
-
-    //设定写入的路径
-    let filepath = path.join('/','avatar', Date.now()+extname)
-    const target = path.join(this.config.baseDir, 'app/public/avatar',filepath);
-    fs.writeFile(target,file,err =>{
-      ctx.logger.error(err);
-    });
-    */
-    // 更新用户头像资料
-    const userInfo = {
-      _id: ctx.session.user._id,
-      avatar: '/avatar/' + filename,
-    };
-    ctx.service.user.editUserInfo(userInfo);
-    ctx.body = userInfo.avatar;
+    const url = await ctx.service.user.updateAvatar(stream, ctx.session.user._id);
+    ctx.body = url;
   }
 
   async passwordPage() {
