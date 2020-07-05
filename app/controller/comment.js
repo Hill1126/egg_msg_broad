@@ -25,11 +25,11 @@ class CommentController extends Controller {
    * 根据id获取留言数据
    * @return {Promise<*>}
    */
-  async getComment() {
-    const { ctx } = this;
-    const id = ctx.validate2({ id: ctx.Joi.string().required() }, ctx.params);
-    ctx.body = await ctx.service.comment.getComment(id);
-  }
+  // async getComment() {
+  //   const { ctx } = this;
+  //   const id = ctx.validate2({ id: ctx.Joi.string().required() }, ctx.params);
+  //   ctx.body = await ctx.service.comment.getComment(id);
+  // }
 
   async listComments() {
     const { ctx } = this;

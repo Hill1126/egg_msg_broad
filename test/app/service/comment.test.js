@@ -34,7 +34,7 @@ describe('test/service/comment.test.js', () => {
   });
 
   it('should list comment with key but no account', async function() {
-
+    ctx.session.user = map.testUser;
     const data = {
       pageSize: 5,
       pageNum: 1,

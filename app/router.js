@@ -24,14 +24,15 @@ module.exports = app => {
   router.put('/api/user/:account/password', loginChecker, controller.auth.changePassword);
 
   // 留言板相关
+  // 页面跳转
+  router.get('/comment', controller.comment.listComments);
+  router.get('/comment/:account', loginChecker, controller.comment.listMyComments);
+
   // api接口
   router.post('/api/comment', loginChecker, controller.comment.createComment);
   // router.get('/api/comment/:id', controller.comment.getComment);
   router.put('/api/comment/:id', loginChecker, controller.comment.updateComment);
   router.delete('/api/comment/:id', loginChecker, controller.comment.deleteComment);
-  // 页面跳转
-  router.get('/comment', controller.comment.listComments);
-  router.get('/comment/:account', loginChecker, controller.comment.listMyComments);
 
   // 回复留言相关
   router.post('/api/reply/:commentId', loginChecker, controller.comment.createReply);

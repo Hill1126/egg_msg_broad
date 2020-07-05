@@ -33,11 +33,10 @@ class AuthController extends Controller {
       password: ctx.Joi.string().required(),
     }, ctx.request.body);
     try {
-      await service.user.createUser(obj);
+      ctx.body = await service.user.createUser(obj);
     } catch (e) {
       ctx.throw(400, '账号不能重复');
     }
-    ctx.body = 'sucess';
   }
 
   async changePassword() {
