@@ -17,7 +17,7 @@ module.exports = app => {
   // 账号登录相关
   router.post('/api/login', controller.auth.login);
   router.get('/api/exit', loginChecker, controller.auth.logout);
-  router.post('/api/register', controller.user.create);
+  router.post('/api/register', controller.auth.register);
   router.put('/api/user/:account/password', loginChecker, controller.auth.changePassword);
 
   // 留言板相关

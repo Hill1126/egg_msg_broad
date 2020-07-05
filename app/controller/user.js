@@ -1,40 +1,9 @@
 'use strict';
 
-
-const fs = require('fs');
 const Controller = require('egg').Controller;
 
-const path = require('path');
-const sendToWormhole = require('stream-wormhole');
-
-// 定义创建接口的请求参数规则
-const createRule = {
-  account: { type: 'string', required: true },
-  password: { type: 'string', required: true },
-};
-
-const updateRule = {
-  name: { type: 'string', required: false },
-  introduction: { type: 'string', required: false },
-};
 
 class UserController extends Controller {
-
-  async create() {
-    const { ctx, service } = this;
-    const obj = {};
-    obj.password = ctx.request.body.password;
-    obj.account = ctx.request.body.account;
-    ctx.validate(createRule, ctx.request.body);
-    try {
-      await service.user.createUser(obj);
-    } catch (e) {
-      ctx.throw(400, '账号不能重复');
-    }
-
-    ctx.body = 'sucess';
-
-  }
 
   /**
    * 根据用户账号 获取相关信息。

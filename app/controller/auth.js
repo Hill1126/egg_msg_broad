@@ -26,6 +26,20 @@ class AuthController extends Controller {
     ctx.body = user;
   }
 
+  async register() {
+    const { ctx, service } = this;
+    const obj = ctx.validate2({
+      account: ctx.Joi.string().required(),
+      password: ctx.Joi.string().required(),
+    }, ctx.request.body);
+    try {
+      await service.user.createUser(obj);
+    } catch (e) {
+      ctx.throw(400, '账号不能重复');
+    }
+    ctx.body = 'sucess';
+  }
+
   async changePassword() {
     const { ctx } = this;
     const data = ctx.validate2({

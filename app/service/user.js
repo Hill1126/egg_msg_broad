@@ -49,7 +49,7 @@ class UserService extends Service {
    */
   async loginByAccount(value) {
     const { ctx } = this;
-    const user = await ctx.model.User.findOne(value, { password: 0 }).lean();
+    const user = await ctx.model.User.findOne(value);
     if (!user) {
       ctx.throw(400, '账号或密码错误');
     }
@@ -71,7 +71,7 @@ class UserService extends Service {
       password: data.oldPass,
     });
     if (!res) {
-      ctx.throw('password,worng!');
+      ctx.throw('密码错误，请重新尝试');
     }
     res.password = data.newPass;
     res.save();
