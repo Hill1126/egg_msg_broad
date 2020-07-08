@@ -1,6 +1,7 @@
-# egg_example
+# 留言板项目
 
-
+## 配置
+在config.default.js中配置mongoose的url
 
 ## QuickStart
 
@@ -14,13 +15,6 @@ see [egg docs][egg] for more detail.
 $ npm i
 $ npm run dev
 $ open http://localhost:7001/
-```
-
-### Deploy
-
-```bash
-$ npm start
-$ npm stop
 ```
 
 ### npm scripts

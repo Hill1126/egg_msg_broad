@@ -7,14 +7,14 @@ describe('util test', () => {
 
   const obj = {};
 
-  before(() => {
-    Object.assign(obj, data);
-  });
-
   const data = {
     username: '1015599722',
     name: 'xujunfeng',
   };
+
+  before(() => {
+    Object.assign(obj, data);
+  });
 
 
   it('should Checker works fine', function() {
@@ -49,7 +49,6 @@ describe('util test', () => {
       assert.fail('校验发生错误:', e.msg);
       return;
     }
-
 
   });
 

@@ -11,11 +11,7 @@
                 <a href="/comment/{{ctx.session.user.account}}" id="myComment">我的留言</a>
             </li>
             <li class="layui-nav-item" id="userBanner">
-                {% if ctx.session.user === null%}
-                <a href="/login.html">
-                    请登录
-                </a>
-                {% else %}
+                {% if ctx.session.user %}
                     <li class="layui-nav-item">
                         <a href="javascript:;" id="nameLink">
                             <img src="{{ctx.session.user.avatar}}" id="header-image"  class="layui-nav-img">
@@ -26,6 +22,10 @@
                             <dd><a href="/user/{{ctx.session.user.account}}/password">修改密码</a></dd>
                         </dl>
                     </li>
+                {% else %}
+                    <a href="/login.html">
+                        请登录
+                    </a>
                 {% endif %}
             </li>
             <li class="layui-nav-item"><a onclick="exit()" href="/api/exit">退出</a></li>

@@ -19,7 +19,6 @@ class AuthController extends Controller {
 
     // 登录校验
     const user = await service.user.loginByAccount(data);
-
     user.password = null;
     // 存入session
     ctx.session.user = user;
@@ -42,9 +41,9 @@ class AuthController extends Controller {
   async changePassword() {
     const { ctx } = this;
     const data = ctx.validate2({
-      newPass: ctx.Joi.string(),
-      oldPass: ctx.Joi.string(),
-      account: ctx.Joi.string(),
+      newPass: ctx.Joi.string().required(),
+      oldPass: ctx.Joi.string().required(),
+      account: ctx.Joi.string().required(),
     }, Object.assign(ctx.request.body, ctx.params, ctx.query));
 
     await ctx.service.user.changePassword(data);
@@ -54,11 +53,9 @@ class AuthController extends Controller {
   async logout() {
     // 删除用户session
     const { ctx } = this;
-    //
     ctx.session.user = null;
     ctx.body = 'success';
   }
-
 
 }
 
