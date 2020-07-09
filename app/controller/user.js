@@ -49,6 +49,15 @@ class UserController extends Controller {
 
   }
 
+  async pageHandler() {
+    const { ctx } = this;
+    if (ctx.session.user) {
+      ctx.response.redirect('/comment');
+    } else {
+      ctx.response.redirect('/login.html');
+    }
+  }
+
   async updateAvatar() {
     const { ctx } = this;
 

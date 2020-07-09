@@ -84,6 +84,24 @@ describe('test/app/controller/user.test.js', () => {
       });
   });
 
+  it('should redirect to comment', async function() {
+    await agent
+      .get('/')
+      .expect(302)
+      .then(res => {
+        assert(res.header.location === '/comment');
+      });
+  });
+
+  it('should redirect to login html', async function() {
+    await app.httpRequest()
+      .get('/')
+      .expect(302)
+      .then(res => {
+        assert(res.header.location === '/login.html');
+      });
+  });
+
   // 删除测试账号
   after(async () => {
     const ctx = app.mockContext();

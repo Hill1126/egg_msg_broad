@@ -30,10 +30,23 @@
       <div class="layui-col-md12">
         <form class="layui-form" >
           <textarea  id="text_board" lay-verify="required"  lay-reqtext="请输入留言内容" placeholder="请输入留言" class="layui-textarea"></textarea>
-          <button class="layui-btn" id="submit" lay-submit lay-filter="formDemo">提交留言</button>
+          <div style="float: right;margin-top: 3px;">
+            <button class="layui-btn" id="submit" lay-submit lay-filter="formDemo" >提交留言</button>
+          </div>
         </form>
       </div>
-    </div>
+<!--      <div class="layui-col-md8">-->
+<!--        <div>-->
+<!--          <label class="layui-form-label" >搜索留言</label>-->
+<!--          <div class="layui-input-block">-->
+<!--            <input type="text" name="search" id="searchKey" lay-verify="title" autocomplete="off" placeholder="请输入搜索内容" class="layui-input">-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div  class="layui-col-md4">-->
+<!--        <button class="layui-btn layui-btn-primary layui-btn-sm" id="search" style="margin-left: 5px;margin-top: 2px" >搜索</button>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
   <!-- 留言展示部分-->
   <div class="layui-container" >
@@ -312,7 +325,14 @@
     );
   });
 
-
+  // $('#search').click(()=>{
+  //   const search = $("#searchKey").val();
+  //   const pageNum = getQueryVariable('pageNum')||1;
+  //   const pageSize = getQueryVariable('pageSize')||5;
+  //   const param = `pageNum=${pageNum}&pageSize=${pageSize}&search=${search}`
+  //   window.location.href= document.location.protocol + '//' +window.location.host+'/comment?'+param;
+  // });
+  //
   function toggleReply(commentId){
     $(`#reply_list${commentId}`).toggle();
   }

@@ -25,6 +25,7 @@ module.exports = app => {
 
   // 留言板相关
   // 页面跳转
+  router.get('/', controller.user.pageHandler);
   router.get('/comment', controller.comment.listComments);
   router.get('/comment/:account', loginChecker, controller.comment.listMyComments);
 
