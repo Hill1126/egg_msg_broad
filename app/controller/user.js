@@ -12,7 +12,7 @@ class UserController extends Controller {
   async getByAccount() {
     const { ctx, service } = this;
 
-    const data = ctx.validate2({ account: ctx.Joi.string().trim().required() }, ctx.params);
+    const data = ctx.validate2({ account: ctx.Joi.string().trim(true).required() }, ctx.params);
     const baseUser = await service.user.getUserBaseInfo(data.account);
     if (baseUser) {
       ctx._pure = true;
@@ -36,9 +36,9 @@ class UserController extends Controller {
     const { ctx, service } = this;
     // 获取数据,封装对象
     const userInfo = ctx.validate2({
-      account: ctx.Joi.string().trim().required(),
-      name: ctx.Joi.trim().string().max(20),
-      introduction: ctx.Joi.string().trim().max(256),
+      account: ctx.Joi.string().trim(true).required(),
+      name: ctx.Joi.string().trim(true).max(20),
+      introduction: ctx.Joi.string().trim(true).max(256),
     }, Object.assign(ctx.request.body, ctx.params));
 
     userInfo._id = ctx.session.user._id;

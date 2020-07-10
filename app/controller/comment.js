@@ -36,7 +36,8 @@ class CommentController extends Controller {
     const data = ctx.validate2({
       pageSize: ctx.Joi.number().integer().default(5),
       pageNum: ctx.Joi.number().integer().default(1),
-      search: ctx.Joi.string().default('').max(10),
+      search: ctx.Joi.string().trim(true).default('')
+        .max(10),
     }, Object.assign(ctx.params, ctx.query));
 
     const res = await ctx.service.comment.listComments(data);
@@ -72,14 +73,15 @@ class CommentController extends Controller {
   async deleteComment() {
     const { ctx } = this;
     const data = ctx.validate2({ id: ctx.Joi.string().required() }, ctx.params);
-    ctx.service.comment.deleteComment(data.id);
+    await ctx.service.comment.deleteComment(data.id);
     ctx.body = 'success';
   }
 
   async createReply() {
     const { ctx } = this;
     const schema = {
-      context: ctx.Joi.string().required().max(512),
+      context: ctx.Joi.string().trim().required()
+        .max(512),
       toUser: ctx.Joi.string().required(),
       commentId: ctx.Joi.string().required(),
     };

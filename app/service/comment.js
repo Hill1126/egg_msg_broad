@@ -40,8 +40,10 @@ class CommentService extends Service {
    */
   async listComments(data) {
     const { pageSize, pageNum, search, account } = data;
-    const { ctx } = this;
+    const { ctx, app } = this;
     const skip = (pageNum - 1) * pageSize;
+
+
     const where = {
       isDel: false,
     };
@@ -59,7 +61,6 @@ class CommentService extends Service {
     const currLoginAct = ctx.session.user ? ctx.session.user.account : 'none';
 
     const [ list, count ] = await Promise.all([
-      // 查找结果及其总数据量
       ctx.model.Comment.find(where).populate(
         { path: 'creator', select: 'name avatar account' }
       ).populate({ path: 'replies.toUser', select: 'name account' })
@@ -72,6 +73,7 @@ class CommentService extends Service {
     if (currLoginAct !== 'none') {
       list.forEach(item => {
         item.creator.editAuth = currLoginAct === item.creator.account;
+        app._.remove(item.replies, reply => reply.isDel !== false);
       });
     }
     return { count, list };
@@ -86,7 +88,14 @@ class CommentService extends Service {
    */
   async updateComment(data) {
     const { ctx, app } = this;
-    return ctx.model.Comment.findOneAndUpdate({ _id: app.mongoose.Types.ObjectId(data.id), isDel: false }, { $set: { context: data.context } });
+    const user = ctx.session.user;
+    const comment = await ctx.model.Comment.findOne({ _id: app.mongoose.Types.ObjectId(data.id), isDel: false });
+    if (String(comment.creator) !== String(user._id)) {
+      return ctx.throw(400, '无权限操作');
+    }
+    comment.context = data.context;
+    await comment.save();
+
   }
 
 
@@ -97,9 +106,12 @@ class CommentService extends Service {
    */
   async deleteComment(commentId) {
     const { ctx, app } = this;
-    await ctx.model.Comment.findOneAndUpdate({ _id: app.mongoose.Types.ObjectId(commentId) },
-      { $set: { isDel: true },
-      });
+    const comment = await ctx.model.Comment.findOne({ _id: app.mongoose.Types.ObjectId(commentId), isDel: false });
+    if (String(comment.creator) !== String(ctx.session.user._id)) {
+      ctx.throw(400, '无权限操作');
+    }
+    comment.isDel = true;
+    await comment.save();
   }
 
   /**
@@ -142,13 +154,22 @@ class CommentService extends Service {
    */
   async deleteReply(data) {
     const { ctx, app } = this;
-    await ctx.model.Comment.findOneAndUpdate(
-      {
-        _id: app.mongoose.Types.ObjectId(data.commentId),
-        // replies: { $elemMatch: { _id: app.mongoose.Types.ObjectId(data.replyId) } },
-      },
-      { $pull: { replies: { _id: app.mongoose.Types.ObjectId(data.replyId) } } }
-    );
+    const user = ctx.session.user;
+    const comment = await ctx.model.Comment.findOne({ _id: app.mongoose.Types.ObjectId(data.commentId) });
+
+    const reply = comment.replies.find(item => String(item.createUser) === String(user._id));
+    // 权限校验
+    if ((String(user._id) !== String(comment.creator))
+      && String(reply._id) !== String(data.replyId)) {
+      ctx.throw(400, '无权限操作');
+    }
+    // 删除回复
+    comment.replies.forEach(item => {
+      if (String(item._id) === String(data.replyId)) {
+        item.isDel = true;
+      }
+    });
+    await comment.save();
   }
 
   /**
@@ -161,13 +182,20 @@ class CommentService extends Service {
    */
   async updateReply(data) {
     const { ctx, app } = this;
-    await ctx.model.Comment.findOneAndUpdate(
-      {
-        _id: app.mongoose.Types.ObjectId(data.commentId),
-        'replies._id': app.mongoose.Types.ObjectId(data.replyId),
-      },
-      { $set: { 'replies.$.context': data.context } }
-    );
+    const user = ctx.session.user;
+    const comment = await ctx.model.Comment.findOne({ _id: app.mongoose.Types.ObjectId(data.commentId) });
+
+    // 删除回复
+    comment.replies.forEach(item => {
+      if (String(item._id) === String(data.replyId)) {
+        if (String(comment.creator) === String(user._id) || String(item.createUser) === String(user._id)) {
+          item.context = data.context;
+        } else {
+          ctx.throw(400, '无权操作');
+        }
+      }
+    });
+    await comment.save();
   }
 
 

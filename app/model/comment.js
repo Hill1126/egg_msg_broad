@@ -19,7 +19,7 @@ module.exports = app => {
       ref: 'User',
     },
     context: { type: String, default: '' },
-    createTime: { type: Date, default: Date.now() },
+    createTime: { type: Date, default: Date.now },
     isDel: { type: Boolean, default: false },
   });
 
@@ -37,7 +37,7 @@ module.exports = app => {
       default: '',
       index: true,
     },
-    createTime: { type: Date, default: Date.now() },
+    createTime: { type: Date, default: Date.now },
     isDel: { type: Boolean, default: false },
     replies: {
       type: [ replyCommentSchema ],
