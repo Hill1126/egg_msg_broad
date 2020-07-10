@@ -11,11 +11,9 @@ class UserController extends Controller {
    */
   async getByAccount() {
     const { ctx, service } = this;
-    // 验证id是否存在
-    const account = ctx.params.account;
 
-    ctx.validate({ account: 'string' }, ctx.params);
-    const baseUser = await service.user.getUserBaseInfo(account);
+    const data = ctx.validate2({ account: ctx.Joi.string().trim().required() }, ctx.params);
+    const baseUser = await service.user.getUserBaseInfo(data.account);
     if (baseUser) {
       ctx._pure = true;
       await this.ctx.render('user.html', baseUser);
@@ -38,9 +36,9 @@ class UserController extends Controller {
     const { ctx, service } = this;
     // 获取数据,封装对象
     const userInfo = ctx.validate2({
-      account: ctx.Joi.string().required(),
-      name: ctx.Joi.string(),
-      introduction: ctx.Joi.string(),
+      account: ctx.Joi.string().trim().required(),
+      name: ctx.Joi.trim().string().max(20),
+      introduction: ctx.Joi.string().trim().max(256),
     }, Object.assign(ctx.request.body, ctx.params));
 
     userInfo._id = ctx.session.user._id;

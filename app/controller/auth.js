@@ -13,8 +13,8 @@ class AuthController extends Controller {
     const { ctx, service } = this;
     // 参数校验
     const data = ctx.validate2({
-      account: ctx.Joi.string().required(),
-      password: ctx.Joi.string().required(),
+      account: ctx.Joi.string().trim().required(),
+      password: ctx.Joi.string().trim().required(),
     }, ctx.request.body);
 
     // 登录校验
@@ -28,8 +28,8 @@ class AuthController extends Controller {
   async register() {
     const { ctx, service } = this;
     const obj = ctx.validate2({
-      account: ctx.Joi.string().required(),
-      password: ctx.Joi.string().required(),
+      account: ctx.Joi.string().trim().required(),
+      password: ctx.Joi.string().trim().required(),
     }, ctx.request.body);
     try {
       ctx.body = await service.user.createUser(obj);
@@ -41,9 +41,9 @@ class AuthController extends Controller {
   async changePassword() {
     const { ctx } = this;
     const data = ctx.validate2({
-      newPass: ctx.Joi.string().required(),
-      oldPass: ctx.Joi.string().required(),
-      account: ctx.Joi.string().required(),
+      newPass: ctx.Joi.string().trim().required(),
+      oldPass: ctx.Joi.string().trim().required(),
+      account: ctx.Joi.string().trim().required(),
     }, Object.assign(ctx.request.body, ctx.params, ctx.query));
 
     await ctx.service.user.changePassword(data);
