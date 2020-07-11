@@ -15,6 +15,7 @@ class UserService extends Service {
    */
   async createUser(userInfo) {
     const { ctx } = this;
+    userInfo.password = ctx.aesEncrypt(userInfo.password);
     return ctx.model.User.create(userInfo);
   }
 
@@ -49,6 +50,7 @@ class UserService extends Service {
    */
   async loginByAccount(value) {
     const { ctx } = this;
+    value.password = ctx.aesEncrypt(value.password);
     const user = await ctx.model.User.findOne(value);
     if (!user) {
       ctx.throw(400, '账号或密码错误');
@@ -66,6 +68,8 @@ class UserService extends Service {
   async changePassword(data) {
     const { ctx } = this;
     const { user } = ctx.session;
+    // 验证用户密码
+    data.oldPass = ctx.aesEncrypt(data.oldPass);
     const res = await ctx.model.User.findOne({
       account: user.account,
       password: data.oldPass,
@@ -73,7 +77,7 @@ class UserService extends Service {
     if (!res) {
       ctx.throw('密码错误，请重新尝试');
     }
-    res.password = data.newPass;
+    res.password = ctx.aesEncrypt(data.newPass);
     res.save();
   }
 

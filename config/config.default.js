@@ -56,3 +56,5 @@ exports.multipart = {
   mode: 'stream',
   fileSize: '10mb',
 };
+
+exports.salt = 'DO_NOT_CHANGE';

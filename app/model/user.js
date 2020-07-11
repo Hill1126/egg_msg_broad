@@ -15,7 +15,7 @@ module.exports = app => {
      * 设定用户模型
      */
   const UserSchema = new Schema({
-    name: { type: String, index: true, default: '留言板用户' + Math.random() * 100000 },
+    name: { type: String, index: true, default: '留言板用户' + Math.floor(Math.random() * 100000) },
     avatar: { type: String, default: '/image/avatar.png' },
     account: {
       type: String,
