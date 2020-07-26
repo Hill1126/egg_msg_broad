@@ -14,7 +14,7 @@ module.exports = () => {
 
       // 简单处理错误
       const res = {
-        code: 1,
+        code: e.status === 401 ? 401 : 1,
         msg: e.msg || e.message || '无错误说明',
       };
       ctx.body = res;

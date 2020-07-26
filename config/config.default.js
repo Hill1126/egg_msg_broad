@@ -22,6 +22,8 @@ exports.news = {
   serverUrl: 'https://hacker-news.firebaseio.com/v0',
 };
 
+exports.baseHost = 'http://localhost:7001';
+
 exports.mongoose = {
   url: ' mongodb://127.0.0.1:27017/msg_board',
   options: {
@@ -33,6 +35,19 @@ exports.mongoose = {
   app: true,
 };
 
+exports.security = {
+  csrf: {
+    enable: false,
+    ignoreJSON: true,
+  },
+  domainWhiteList: '*',
+};
+
+exports.cors = {
+  origin: 'http://localhost:8080',
+  credentials: true,
+  allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+};
 /**
  * 关闭csrf
  * @type {{xframe: {enable: boolean}}}

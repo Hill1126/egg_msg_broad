@@ -17,6 +17,7 @@ class CommentController extends Controller {
     };
     // 进行参数校验
     const data = ctx.validate2(schema, ctx.request.body);
+    if (!data.context.trim()) ctx.throw(400, '留言不能全空格');
     // 包装留言板对象
     ctx.body = await ctx.service.comment.createComment(data);
   }
@@ -25,25 +26,22 @@ class CommentController extends Controller {
    * 根据id获取留言数据
    * @return {Promise<*>}
    */
-  // async getComment() {
-  //   const { ctx } = this;
-  //   const id = ctx.validate2({ id: ctx.Joi.string().required() }, ctx.params);
-  //   ctx.body = await ctx.service.comment.getComment(id);
-  // }
+  async getComment() {
+    const { ctx } = this;
+    const data = ctx.validate2({ id: ctx.Joi.string().required() }, ctx.params);
+    ctx.body = await ctx.service.comment.getComment(data.id);
+  }
 
   async listComments() {
     const { ctx } = this;
     const data = ctx.validate2({
       pageSize: ctx.Joi.number().integer().default(5),
       pageNum: ctx.Joi.number().integer().default(1),
-      search: ctx.Joi.string().trim(true).default('')
+      search: ctx.Joi.string().trim().default('')
         .max(10),
     }, Object.assign(ctx.params, ctx.query));
 
-    const res = await ctx.service.comment.listComments(data);
-    // 不进行消息封装
-    ctx._pure = true;
-    await ctx.render('index.html', res);
+    ctx.body = await ctx.service.comment.listComments(data);
   }
 
   async listMyComments() {
@@ -51,11 +49,12 @@ class CommentController extends Controller {
     const data = ctx.validate2({
       pageSize: ctx.Joi.number().integer().default(5),
       pageNum: ctx.Joi.number().integer().default(1),
-      account: ctx.Joi.string().trim(),
+      search: ctx.Joi.string().trim().default('')
+        .max(10),
     }, Object.assign(ctx.params, ctx.query));
+    data.account = ctx.session.user.account;
     const res = await ctx.service.comment.listComments(data);
-    ctx._pure = true;
-    await this.ctx.render('myMsg.html', res);
+    ctx.body = res;
   }
 
   async updateComment() {
@@ -66,7 +65,9 @@ class CommentController extends Controller {
     };
     // 进行参数校验
     const data = ctx.validate2(schema, Object.assign(ctx.request.body, ctx.params));
-    ctx.body = await ctx.service.comment.updateComment(data);
+    if (!data.context.trim()) ctx.throw(400, '留言不能全空格');
+    const result = await ctx.service.comment.updateComment(data);
+    ctx.body = 'ok';
   }
 
 

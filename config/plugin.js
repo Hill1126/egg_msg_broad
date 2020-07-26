@@ -15,6 +15,11 @@ exports.validate = {
   package: 'egg-validate',
 };
 
+exports.cors = {
+  enable: true,
+  package: 'egg-cors',
+};
+
 /**
  * egg-mongodb支持
  * @type {{package: string, enable: boolean}}

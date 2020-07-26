@@ -16,7 +16,7 @@ module.exports = app => {
      */
   const UserSchema = new Schema({
     name: { type: String, index: true, default: '留言板用户' + Math.floor(Math.random() * 100000) },
-    avatar: { type: String, default: '/image/avatar.png' },
+    avatar: { type: String, default: `${app.config.baseHost}/image/avatar.png` },
     account: {
       type: String,
       required: true,

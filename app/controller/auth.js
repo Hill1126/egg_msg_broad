@@ -28,8 +28,12 @@ class AuthController extends Controller {
   async register() {
     const { ctx, service } = this;
     const obj = ctx.validate2({
-      account: ctx.Joi.string().trim().required(),
-      password: ctx.Joi.string().trim().required(),
+      account: ctx.Joi.string().max(20).min(1)
+        .trim()
+        .required(),
+      password: ctx.Joi.string().max(20).min(1)
+        .trim()
+        .required(),
     }, ctx.request.body);
     try {
       ctx.body = await service.user.createUser(obj);

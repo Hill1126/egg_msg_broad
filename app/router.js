@@ -26,12 +26,12 @@ module.exports = app => {
   // 留言板相关
   // 页面跳转
   router.get('/', controller.user.pageHandler);
-  router.get('/comment', controller.comment.listComments);
-  router.get('/comment/:account', loginChecker, controller.comment.listMyComments);
+  router.get('/api/comment', controller.comment.listComments);
+  router.get('/api/comment/myComment', loginChecker, controller.comment.listMyComments);
 
   // api接口
   router.post('/api/comment', loginChecker, controller.comment.createComment);
-  // router.get('/api/comment/:id', controller.comment.getComment);
+  router.get('/api/comment/:id', controller.comment.getComment);
   router.put('/api/comment/:id', loginChecker, controller.comment.updateComment);
   router.delete('/api/comment/:id', loginChecker, controller.comment.deleteComment);
 
